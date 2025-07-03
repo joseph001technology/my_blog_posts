@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{%block title %}
+{{ post.title}}
+{% endblock %}
+   {% block content %}
+    <!-- ✅ POST CONTENT -->
+    <div class="container mt-4">
+      <h2>{{ post.title }}</h2>
+      <p class="text-muted">By {{ post.author }} |
+              Published on {{post.publish|date:"F j, Y" }}
+      </p>
+      <hr>
+      <p>{{ post.content|linebreaks }}</p>
+    </div>
+
+    {% endblock %}

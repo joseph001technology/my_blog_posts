@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{%block title %}
+  Blog posts
+{% endblock %}
+   {% block content %}
+
+
+
+
+    <!-- ✅ POSTS DISPLAY -->
+    <div class="container mt-4">
+      <h2>All Posts</h2>
+
+      {% for post in posts %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <h4 class="card-title">
+              <a href="{% url 'blog:post_single' post.slug %}" class="text-decoration-none text-dark">
+                 {{ post.title }}
+              </a>
+             </h4>
+
+            <h6 class="card-subtitle mb-2 text-muted">
+              by {{ post.author }} |
+              Published on {{ post.publish|date:"F j, Y" }}
+            </h6>
+
+            {% if post.excerpt %}
+              <p class="card-text">{{ post.excerpt|linebreaks }}</p>
+            {% else %}
+              <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% empty %}
+        <p>No posts available.</p>
+      {% endfor %}
+    </div>
+
+      {% endblock %}
