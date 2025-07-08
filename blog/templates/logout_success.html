@@ -1,0 +1,19 @@
+<!-- logout_success.html without extending base.html -->
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logged Out</title>
+  <link rel="stylesheet" href="{% static 'your_css_file.css' %}">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>You have been logged out</h2>
+    <p>Thank you for visiting. See you again soon!</p>
+    <a href="{% url 'account_login' %}">Login again</a>
+  </div>
+</body>
+</html>

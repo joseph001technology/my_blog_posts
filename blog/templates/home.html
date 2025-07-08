@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>About Me</h2>
+  <p>I am a student currently pursuing a degree in BBIT (Bachelor of Business Information Technology).</p>
+
+  <h3>Skills</h3>
+  <ul>
+    <li>Python</li>
+    <li>Django</li>
+    <li>HTML/CSS</li>
+  </ul>
+
+  <h3>Education</h3>
+  <p>BBIT – Bachelor of Business Information Technology</p>
+
+  <a href="{% url 'blog:homepage' %}" class="btn btn-primary mt-3">Read My Posts</a>
+
+  <div class="mt-4">
+    <img src="{% static 'images/jose1.jpg' %}" alt="My Photo" class="rounded" style="width: 200px; height: auto;">
+
+  </div>
+</div>
+{% endblock %}

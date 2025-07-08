@@ -1,0 +1,45 @@
+# This file is used to render the Google sign-in confirmation page.it didnt work though
+{% load i18n socialaccount %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sign In Via Google</title>
+
+    <!-- Bootstrap CSS (CDN only) -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-..."
+          crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+
+          <form method="post" action="{{ action_url }}" class="text-center border p-4 rounded">
+            {% csrf_token %}
+            <h1 class="mb-3">Sign In via {{ provider.name }}</h1>
+            <p class="mb-4">
+              You are about to sign in using a third-party account from {{ provider.name }}.
+            </p>
+
+            <button type="submit" class="btn btn-primary btn-block">
+              {% trans "Continue" %}
+            </button>
+
+            <p class="mt-5 text-muted">&copy; {{ now|date:"Y" }}</p>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional Bootstrap JS (CDN) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+  </body>
+</html>
