@@ -1,38 +1,89 @@
-<!-- templates/base.html -->
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>
-      {% block title %}{% endblock %}
-    </title>
+  <title>{% block title %}My Blog{% endblock %}</title>
+  {% load static %}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-  </head>
-  <body>
+  <!-- ✅ Navbar -->
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">Dashboard</a>
 
-    <!-- ✅ NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'blog:homepage' %}">BlogPosts</a>
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" href="{% url 'blog:homepage' %}">Home Page</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <!-- Hamburger toggle button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <!-- ✅ PAGE CONTENT -->
-    <div class="container mt-4">
-      {% block content %}
-      {% endblock %}
+    <!-- Collapsible menu -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+
+        <!-- Home -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'blog:personal_home' %}">Home</a>
+        </li>
+
+        <!-- Posts -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'blog:homepage' %}">Posts</a>
+        </li>
+
+        <!-- Logout -->
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+          </li>
+        {% endif %}
+
+      </ul>
     </div>
+  </div>
+</nav>
+<!-- Modal for Expanded Photo -->
+<div class="modal fade" id="profilePhotoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-body text-center">
+        <img src="{% static 'images/jose1.jpg' %}" alt="Jose's Full Photo" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+ 
+  <div class="container mt-4 mb-2">
+    <div class="d-flex align-items-center gap-3">
+      <!-- Trigger image -->
+      <img src="{% static 'images/jose1.jpg' %}" alt="Jose's Photo"
+        style="width: 100px; height: 100px; border-radius: 50%; cursor: pointer;"
+        data-bs-toggle="modal" data-bs-target="#profilePhotoModal">
+
+      <h1 class="h3 m-0">Hi, my name is joseph kiarie</h1>
+    </div>
+  </div>
+
+   
+  {% block content %}{% endblock %}
+
+  
+  <footer id="contact" class="bg-light text-center py-3 mt-5 border-top">
+    <p class="mb-0">
+      <strong>Email:</strong> josekiarie@gmail.com |
+      <strong>Phone:</strong> 0703020997 |
+      <strong>Address:</strong> Nairobi, Thika
+    </p>
+  </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>
