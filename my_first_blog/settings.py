@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    
+    'widget_tweaks',
     
 ]
 
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'my_first_blog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-          'DIRS': [os.path.join(BASE_DIR, 'templates')], 
+          'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,7 +132,8 @@ STATIC_URL = 'static/'
 SITE_ID = 2
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL ='/logout-success/'
-LOGIN_REDIRECT_URL = '/home/'
+LOGIN_REDIRECT_URL = '/accounts/login/'
+
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -152,6 +153,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'my_first_blog' / 'static'
 ]
 
+SOCIALACCOUNT_FORMS = {
+    'signup': 'blog.forms.MyCustomSocialSignupForm'
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
