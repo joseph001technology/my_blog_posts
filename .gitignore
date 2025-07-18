@@ -19,6 +19,7 @@ settings_local.py
 
 # SQLite database
 *.sqlite3
+db.sqlite3
 
 # VS Code settings
 .vscode/
