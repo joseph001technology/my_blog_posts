@@ -130,10 +130,12 @@ USE_TZ = True
 import os
 STATIC_URL = 'static/'
 SITE_ID = 2
- 
-ACCOUNT_LOGOUT_REDIRECT_URL ='/logout-success/'
-LOGIN_REDIRECT_URL = '/accounts/login/'
 
+ 
+LOGIN_URL = '/accounts/login/'  # This is correct
+LOGIN_REDIRECT_URL = '/home/'
+ACCOUNT_LOGOUT_REDIRECT_URL ='/logout-success/'
+  
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

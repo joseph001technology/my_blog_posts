@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
 from allauth.socialaccount.providers.google.views import oauth2_login
 from .models import Post
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     all_posts = Post.newmanager.all()
@@ -14,6 +15,8 @@ def post_single(request, slug):  # <== This must be 'slug'
 
 def logout_success(request):
     return render(request, 'blogtemplates/logout_success.html')
+
+@login_required
 def personal_home(request):
     return render(request, 'blogtemplates/home.html')
 
