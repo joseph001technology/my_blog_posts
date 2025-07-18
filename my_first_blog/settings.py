@@ -130,7 +130,7 @@ USE_TZ = True
 import os
 STATIC_URL = 'static/'
 SITE_ID = 2
-LOGIN_REDIRECT_URL = '/'
+ 
 ACCOUNT_LOGOUT_REDIRECT_URL ='/logout-success/'
 LOGIN_REDIRECT_URL = '/accounts/login/'
 
