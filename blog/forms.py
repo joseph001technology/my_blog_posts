@@ -7,6 +7,11 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = '__all__'
+        
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.fields['slug'].required = False 
+        
 
 class MyCustomSocialSignupForm(SignupForm):
     full_name = forms.CharField(max_length=100, label="Full Name")

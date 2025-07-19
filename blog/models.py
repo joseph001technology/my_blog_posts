@@ -16,7 +16,7 @@ class Post(models.Model) :#database table
 
     title = models.CharField(max_length=250)
     excerpt = models.TextField(null=True,blank=True,verbose_name="Excerpt (optional)")
-    slug = models.SlugField(max_length=250, unique_for_date='publish', )
+    slug = models.SlugField(max_length=250, unique_for_date='publish',blank=True )
     publish = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
