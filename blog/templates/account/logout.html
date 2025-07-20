@@ -1,9 +1,9 @@
-{% load socialaccount %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Continue with Google</title>
+  <title>{% trans "Sign Out" %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap -->
@@ -31,7 +31,7 @@
       animation: fadeIn 0.7s ease-in-out;
     }
 
-    .btn-google {
+    .btn-logout {
       background-color: #db4437;
       color: #fff;
       width: 100%;
@@ -41,15 +41,9 @@
       transition: all 0.3s ease;
     }
 
-    .btn-google:hover {
+    .btn-logout:hover {
       background-color: #c1352d;
       transform: scale(1.02);
-    }
-
-    .google-icon {
-      font-size: 1.2rem;
-      margin-right: 8px;
-      vertical-align: middle;
     }
 
     .alternative {
@@ -66,18 +60,17 @@
 <body>
 
   <div class="card">
-    <h3 class="mb-3">Continue</h3>
-    <p class="text-muted mb-4">Click continue to proceed with your Google account.</p>
+    <h3 class="mb-3">{% trans "Are you sure you want to sign out?" %}</h3>
 
-    <form method="post">
+    <form method="post" action="{% url 'account_logout' %}">
       {% csrf_token %}
-      <button type="submit" class="btn btn-google">
-        <i class="bi bi-google google-icon"></i> Continue
+      <button type="submit" class="btn btn-logout">
+        <i class="bi bi-box-arrow-right"></i> {% trans "Sign Out" %}
       </button>
     </form>
 
     <div class="alternative">
-      Or <a href="{% url 'account_login' %}">use email & password</a>
+      <a href="/">Cancel and go back</a>
     </div>
   </div>
 
@@ -86,4 +79,3 @@
 
 </body>
 </html>
-
