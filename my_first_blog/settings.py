@@ -132,7 +132,7 @@ import os
 STATIC_URL = 'static/'
 SITE_ID = 2
 
- 
+
 LOGIN_URL = '/accounts/login/'  # This is correct
 LOGIN_REDIRECT_URL = '/home/'
 ACCOUNT_LOGOUT_REDIRECT_URL ='/logout-success/'
