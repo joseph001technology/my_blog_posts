@@ -2,24 +2,110 @@
 {% load static %}
 
 {% block content %}
+
+<div class="container mt-4 mb-2">
+  <div >
+   
+    <!-- Trigger image -->
+     
+    <h6>Hi, my name is</h6>
+    <h1 class="name text">Jose Kiarie</h1>
+    <h6 class="text">Web Developer</h6>
+    <br>
+    <h4>Turning ideas into scalable web solutions </h4>
+
+   <a href="mailto:josenkiarie054@gmail.com" class="btn btn-primary mt-3">Get in touch</a>
+   <br><br>
+  </div>
+  
+</div>
+
+
 <div class="container mt-4">
   <h2>About Me</h2>
-  <p>I am a student currently pursuing a degree in BBIT (Bachelor of Business Information Technology).</p>
+  <h5>👋 Hey there!</h5>
+  <p> 
+<strong>Welcome to my space on the web!</strong>
+<br><br>
+I’m currently a student pursuing a Bachelor of Business Information Technology (BBIT) — a unique intersection of business and tech that’s helped shape my approach to solving real-world problems through code. Along the way, I’ve grown into a full-stack web developer, with hands-on experience building intuitive, scalable, and responsive applications across both frontend and backend.
+<br><br>
+This site is a blend of my journey, projects, experiments, and thoughts as I continue evolving in the world of software development. Here, you’ll find personal and technical blog posts, as well as a portfolio of the projects I’ve worked on — from practical business tools to problem-solving platforms aimed at real users. I build not just to learn, but to create things that matter.
+<br><br>
+💻 <strong>What I Do</strong>
+<br>
+While still a student, I’ve actively taken on freelance and personal projects that mimic real-world complexity — building CRUD systems, blog platforms, USSD-driven tools, crop marketplace apps for farmers, and more. I focus on clean architecture, efficient data flow, and user-first design.
+<br><br>
+ 
+I enjoy working on end-to-end web applications, from setting up backend logic and APIs, to designing sleek and responsive frontends.
+<br><br>
+🌍 <strong>Why I Build</strong>
+  <br>
+I’m passionate about building solutions that are simple, impactful, and real. I often explore ideas that empower underrepresented communities — such as creating tech tools for small-scale farmers or simplifying digital access through mobile-first solutions.
+<br><br>
+As someone learning both the technical and business side of tech, I’m drawn to projects that require thoughtful integration of systems, scalability, and user strategy.
+<br><br>
+🧠 <strong>Always Learning</strong>
+<br>
+Technology moves fast — and I enjoy keeping pace. Outside of formal coursework, I constantly explore new tools and frameworks, and dive into topics like APIs, authentication, deployment, and automation. Whether I’m debugging a stubborn Django error or experimenting with a new UI approach, I treat every challenge as an opportunity to grow.
+<br><br>
+✨<strong> Beyond the Code </strong>
+When I’m not buried in VS Code or pushing commits to GitHub, you’ll find me:
+<br>
+Brainstorming side projects
+<br>
+Reading about tech, business, or philosophy
+<br>
+Taking walks, listening to music, or exploring new places
+<br>
+Connecting with other devs and sharing ideas
+<br><br>
+ 
+🙌 <strong> Let’s Build Something Awesome </strong>
+<br>
+I’m just getting started — and the best projects are yet to come. Whether you’re a fellow developer, student, or someone with an idea to build out, I’d love to connect.
+<br>
+Let’s create solutions that are functional, elegant, and built to last.</p>
+<br><br>
 
-  <h3>Skills</h3>
-  <ul>
-    <li>Python</li>
-    <li>Django</li>
-    <li>HTML/CSS</li>
-  </ul>
+<div class="skills and technologies">
+    <h3>Skills & Technologies</h3>
+    <p>Here are some of the key skills and technologies I’ve worked with:</p>
+  <div class="skills">
+     <h5>Skills:</h5>
+     <ul>
+       <li><strong>Frontend:</strong> HTML, CSS, JavaScript, Bootstrap</li>
+       <li><strong>Backend:</strong> Python (Django), MySQL/PostgreSQL</li>
+       <li><strong>Tools & Platforms:</strong> Git, GitHub, PythonAnywhere, VS Code</li>
+       <li><strong>Design Thinking:</strong> Wireframing, user flow planning, UI optimization
+       </li>
+     </ul>
+     <br><br>
+ </div>
+ <div class="technologies">
+     <h5>Technologies:</h5>
+     <ul>
+       <li><strong>Languages:</strong> Python, JavaScript, SQL, HTML, CSS Frameworks: Django, Bootstrap</li>
+       <li><strong>Tools:</strong> Git, GitHub, VS Code, PythonAnywhere </li>
+       <li><strong>Concepts:</strong> REST APIs, Authentication, CRUD systems</li>
+     </ul>
+     <br><br>
+  </div>
+</div>
 
+
+
+<div class="education">
   <h3>Education</h3>
-  <p>BBIT – Bachelor of Business Information Technology</p>
+  <p>Bachelor of Business Information Technology <strong>(BBIT)-</strong> Jomo Kenyatta University Of Agriculture and Technology  <strong>(JKUAT)</strong></p>
+  </div>
 
   <a href="{% url 'blog:homepage' %}" class="btn btn-primary mt-3">Read My Posts</a>
 
   <div class="mt-4">
-    <img src="{% static 'images/jose1.jpg' %}" alt="My Photo" class="rounded" style="width: 200px; height: auto;">
+    <img src="{% static 'images/jose1.jpg' %}" alt="Jose's Photo"
+         class="profile-photo"
+         data-bs-toggle="modal" data-bs-target="#profilePhotoModal">
+
 
   </div>
 </div>
