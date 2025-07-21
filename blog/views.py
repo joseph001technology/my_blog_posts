@@ -5,13 +5,23 @@ from allauth.socialaccount.providers.google.views import oauth2_login
 from .models import Post
 from django.contrib.auth.decorators import login_required
 
+def test_func(self):
+        return self.request.user.username == "josephkiarie"
+
 def home(request):
     all_posts = Post.newmanager.all()
     return render(request, 'blogtemplates/index.html', {'posts': all_posts})
+    def test_func(self):
+        return self.request.user.username == "josephkiarie"
 
 def post_single(request, slug):  # <== This must be 'slug'
     post = get_object_or_404(Post, slug=slug, status='published')
     return render(request, 'blogtemplates/single.html', {'post': post})
+
+    def test_func(self):
+        return self.request.user.username == "josephkiarie"
+    
+    
 
 def logout_success(request):
     return render(request, 'blogtemplates/logout_success.html')
@@ -25,6 +35,9 @@ class AddView(CreateView):
     template_name = 'blogtemplates/add.html'
     fields = '__all__'
     success_url = reverse_lazy('blog:homepage')
+    
+    def test_func(self):
+        return self.request.user.username == "josephkiarie"
 
 class EditView(UpdateView):
     model = Post
@@ -32,12 +45,18 @@ class EditView(UpdateView):
     fields = '__all__'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
+    def test_func(self):
+        return self.request.user.username == "josephkiarie"
 
 class Delete(DeleteView):
-        model = Post
-        pk_url_kwarg = 'pk'
-        success_url = reverse_lazy('blog:homepage')
-        template_name = 'blogtemplates/confirm-delete.html'
+    model = Post
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('blog:homepage')
+    template_name = 'blogtemplates/confirm-delete.html'
+        
+        
+    def test_func(self):
+        return self.request.user.username == "josephkiarie"
 
 
 
