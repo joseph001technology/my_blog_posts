@@ -3,25 +3,26 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
-     <h1>Tittle</h1>
-    <h5>{{ post.title }}</h5>
-    <p class="text-muted">
-      By {{ post.author }} | Published on {{ post.publish|date:"F j, Y" }}
-    </p>
-    <hr>
-    <h2>Content</h2>
-    <p>{{ post.content|linebreaks }}</p>
+<div class="container mt-4 ">
+  <h1>Title</h1>
+  <h5>{{ post.title }}</h5>
+  <p class="text-muted">
+    By {{ post.author }} | Published on {{ post.publish|date:"F j, Y" }}
+  </p>
+  <hr>
+  <h2>Content</h2>
+  <p>{{ post.content|linebreaks }}</p>
 
-     <div class="btn-group">
-                {% if user.username == "joseph7" %}
-                <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Edit</a>
-                <a href=" {% url 'blog:delete' post.pk %} " class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Delete</a>
-                {% endif %}
-     </div>
-    <br>
-    <a href="{% url 'blog:homepage' %}" class="btn btn-secondary mt-4">← Back to Home</a>
-
+  <div class="btn-group button">
+    {% if user.is_authenticated %}
+      {% if user.username == "josephkiarie" or user.is_superuser %}
+        <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+        <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary">Delete</a>
+      {% endif %}
+    {% endif %}
   </div>
 
+  <br>
+  <a href="{% url 'blog:homepage' %}" class="btn btn-secondary mt-4">← Back to Home</a>
+</div>
 {% endblock %}

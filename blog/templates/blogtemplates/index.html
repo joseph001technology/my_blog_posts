@@ -1,58 +1,61 @@
 {% extends 'blogtemplates/base.html' %}
-{%block title %}
-  Blog posts
+{% block title %}
+  Blog Posts
 {% endblock %}
-   {% block content %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="navbar-brand">Post Administration</div>
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav2">
+    <div class="navbar-brand ">Post Administration</div>
     <div class="collapse navbar-collapse" id="navbar">
-          {% if user.username == "joseph7" %}
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'blog:add' %}">Add New</a>
-            </li>
-        </ul>
-          {% endif %}
+        {% if user.is_authenticated %}
+            {% if user.username == "josephkiarie" or user.is_superuser %}
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'blog:add' %}">Add New</a>
+                    </li>
+                </ul>
+            {% endif %}
+        {% endif %}
     </div>
 </nav>
 
+<!-- ✅ POSTS DISPLAY -->
+<div class="container mt-4">
+    <h2>All Posts</h2>
+    {% for post in posts %}
+        <div class="card mb-3 single-post-container">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <a href="{% url 'blog:post_single' post.slug %}" class="text-decoration-none text-dark">
+                        {{ post.title }}
+                    </a>
+                </h4>
 
-    <!-- ✅ POSTS DISPLAY -->
-    <div class="container mt-4">
-      <h2>All Posts</h2>
-      {% load %}
-      {% for post in posts %}
-        <div class="card mb-3">
-          <div class="card-body">
-            <h4 class="card-title">
-              <a href="{% url 'blog:post_single' post.slug %}" class="text-decoration-none text-dark">
-                 {{ post.title }}
-              </a>
-             </h4>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    by {{ post.author }} |
+                    Published on {{ post.publish|date:"F j, Y" }}
+                </h6>
 
-            <h6 class="card-subtitle mb-2 text-muted">
-              by {{ post.author }} |
-              Published on {{ post.publish|date:"F j, Y" }}
-            </h6>
+                {% if post.excerpt %}
+                    <p class="card-text">{{ post.excerpt|linebreaks }}</p>
+                {% else %}
+                    <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+                {% endif %}
 
-            {% if post.excerpt %}
-              <p class="card-text">{{ post.excerpt|linebreaks }}</p>
-            {% else %}
-              <p class="card-text">{{ post.content|truncatewords:30 }}</p>
-
-            {% endif %}
-            <div class="btn-group">
-              {% if user.username == "joseph7" %}
-                <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Edit</a>
-                <a href=" {% url 'blog:delete' post.pk %} " class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Delete</a>
-              {% endif %}
+                <div class="btn-group button">
+                    {% if user.is_authenticated %}
+                        {% if user.username == "josephkiarie" or user.is_superuser %}
+                            <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary">Delete</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
-          </div>
         </div>
-      {% empty %}
+    {% empty %}
         <p>No posts available.</p>
-      {% endfor %}
-    </div>
+    {% endfor %}
+</div>
 
-      {% endblock %}
+{% endblock %}

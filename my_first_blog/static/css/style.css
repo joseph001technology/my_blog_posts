@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(135deg, #74ebd5, #acb6e5);
+  background: linear-gradient(135deg, #74ebd5, #1b5c80);
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 0;
@@ -144,3 +144,56 @@ body {
   color: #023e8a;
   text-decoration: underline;
 }
+
+.single-post-container {
+  background-color: #6bd3c4; /* light yellow */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.button{
+  background-color : #a9e0cf;
+   
+} 
+/* Reset navbar background */
+.navbar {
+  background-color: #0e5a56!important;   
+}
+
+ 
+.navbar-brand,
+#navbar {
+  background-color: transparent;  
+
+}
+
+.navbar .navbar-brand {
+  color: black !important;
+}
+
+#contact {
+  background-color: #165d79!important;
+
+  color: #000000; 
+
+  padding: 1.5rem 0;
+
+  border-top: 1px solid #2886ab;  
+
+  font-size: 0.95rem;
+}
+
+.navbar-brand.custom-bg {
+  background-color: #064f37 !important;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.25rem;
+  color: white;
+}
+
+.brand-bg {
+  background-color: #0d6efd ! important;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.25rem;
+
+}
+

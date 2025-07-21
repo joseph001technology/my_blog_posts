@@ -13,6 +13,7 @@ def test_func(self):
 def home(request):
     all_posts = Post.newmanager.all()
     return render(request, 'blogtemplates/index.html', {'posts': all_posts})
+
     def test_func(self):
         user = self.request.user
         return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
