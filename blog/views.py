@@ -6,20 +6,26 @@ from .models import Post
 from django.contrib.auth.decorators import login_required
 
 def test_func(self):
-        return self.request.user.username == "josephkiarie"
+    user = self.request.user
+    return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+
 
 def home(request):
     all_posts = Post.newmanager.all()
     return render(request, 'blogtemplates/index.html', {'posts': all_posts})
     def test_func(self):
-        return self.request.user.username == "josephkiarie"
+        user = self.request.user
+        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+
 
 def post_single(request, slug):  # <== This must be 'slug'
     post = get_object_or_404(Post, slug=slug, status='published')
     return render(request, 'blogtemplates/single.html', {'post': post})
 
     def test_func(self):
-        return self.request.user.username == "josephkiarie"
+        user = self.request.user
+        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+
     
     
 
@@ -37,7 +43,9 @@ class AddView(CreateView):
     success_url = reverse_lazy('blog:homepage')
     
     def test_func(self):
-        return self.request.user.username == "josephkiarie"
+        user = self.request.user
+        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+
 
 class EditView(UpdateView):
     model = Post
@@ -46,7 +54,9 @@ class EditView(UpdateView):
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
     def test_func(self):
-        return self.request.user.username == "josephkiarie"
+        user = self.request.user
+        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+
 
 class Delete(DeleteView):
     model = Post
@@ -56,7 +66,9 @@ class Delete(DeleteView):
         
         
     def test_func(self):
-        return self.request.user.username == "josephkiarie"
+        user = self.request.user
+        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+
 
 
 
