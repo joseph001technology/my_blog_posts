@@ -113,7 +113,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ added for collectstatic
 STATICFILES_DIRS = [
     BASE_DIR / 'my_first_blog' / 'static'
