@@ -7,7 +7,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="navbar-brand">Post Administration</div>
     <div class="collapse navbar-collapse" id="navbar">
-          {% if user.username == "josephkiarie" %}
+          {% if user.username == "joseph7" %}
         <ul class="navbar-nav">
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'blog:add' %}">Add New</a>
@@ -43,7 +43,7 @@
 
             {% endif %}
             <div class="btn-group">
-              {% if user.username == "josephkiarie" %}
+              {% if user.username == "joseph7" %}
                 <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Edit</a>
                 <a href=" {% url 'blog:delete' post.pk %} " class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Delete</a>
               {% endif %}
