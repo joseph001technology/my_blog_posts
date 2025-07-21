@@ -14,7 +14,7 @@
     <p>{{ post.content|linebreaks }}</p>
 
      <div class="btn-group">
-                {% if user.username == "josephkiarie" %}
+                {% if user.username == "joseph7" %}
                 <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Edit</a>
                 <a href=" {% url 'blog:delete' post.pk %} " class="btn btn-sm btn-outline-secondary" role="button" aria-pressed="true">Delete</a>
                 {% endif %}
