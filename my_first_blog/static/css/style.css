@@ -60,7 +60,7 @@ body {
 }
 
 .explore-btn {
-  background-color: #3d5a80;
+  background-color: #6cead1;
   color: white;
   padding: 0.6rem 1.4rem;
   border: none;
@@ -70,7 +70,7 @@ body {
 }
 
 .explore-btn:hover {
-  background-color: #293241;
+  background-color: #14615c;
   color: #fff;
 }
 
@@ -151,10 +151,7 @@ body {
   border-radius: 8px;
 }
 
-.button{
-  background-color : #a9e0cf;
-   
-} 
+ 
 /* Reset navbar background */
 .navbar {
   background-color: #0e5a56!important;   
@@ -197,3 +194,4 @@ body {
 
 }
 
+ 
