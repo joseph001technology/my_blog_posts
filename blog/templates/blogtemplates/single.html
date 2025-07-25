@@ -1,4 +1,4 @@
-{% extends 'blogtemplates/base.html' %}
+{% extends 'blogtemplates/base.html' %} 
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -16,13 +16,55 @@
   <div class="btn-group button">
     {% if user.is_authenticated %}
       {% if user.username == "josephkiarie" or user.is_superuser %}
-        <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-        <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary">Delete</a>
+        <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Edit</a>
+        <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Delete</a>
       {% endif %}
+    {% endif %}
+    <!-- ✅ Comments Button styled like others -->
+    <button id="toggleComments" class="btn btn-sm btn-outline-secondary explore-btn">Comments</button>
+  </div>
+
+  <!-- ✅ Comments Section -->
+  <div id="commentsSection" style="display: none;" class="mt-4">
+    {% with comments.count as total_comments %}
+      <h4>{{ total_comments }} Comment{{ total_comments|pluralize }}</h4>
+    {% endwith %}
+
+    {% for comment in comments %}
+      <div class="mb-3 p-2 border rounded">
+        <strong>{{ comment.name }}</strong>
+        <p>{{ comment.content|linebreaks }}</p>
+      </div>
+    {% empty %}
+      <p>There are no comments for this post.</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+      <h5 class="mt-4">Add Your Comment</h5>
+      <form id="myForm" method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    {% else %}
+      <p>You must <a href="{% url 'account_login' %}">log in</a> to leave a comment.</p>
     {% endif %}
   </div>
 
-  <br>
   <a href="{% url 'blog:homepage' %}" class="btn btn-secondary mt-4">← Back to Home</a>
 </div>
+
+<!-- ✅ Toggle Script -->
+<script>
+  const btn = document.getElementById("toggleComments");
+  const section = document.getElementById("commentsSection");
+
+  btn.addEventListener("click", () => {
+    if (section.style.display === "none") {
+      section.style.display = "block";
+    } else {
+      section.style.display = "none";
+    }
+  });
+</script>
 {% endblock %}

@@ -46,8 +46,8 @@
                 <div class="btn-group button">
                     {% if user.is_authenticated %}
                         {% if user.username == "josephkiarie" or user.is_superuser %}
-                            <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                            <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary">Delete</a>
+                            <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Edit</a>
+                            <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Delete</a>
                         {% endif %}
                     {% endif %}
                 </div>
