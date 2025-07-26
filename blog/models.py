@@ -31,6 +31,11 @@ class Post(models.Model) :#database table
     status = models.CharField(max_length=10, choices=CHOICES, default=DRAFT)
     objects = models.Manager()  # default manager
     newmanager = NewManager()
+    
+    def save(self, *args, **kwargs):
+        if not self.image:
+            self.image = 'posts/default.png'
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ('-publish',)
