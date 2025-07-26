@@ -37,6 +37,10 @@
                     Published on {{ post.publish|date:"F j, Y" }}
                 </h6>
 
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid rounded mb-2" style="max-height: 300px;">
+                {% endif %}
+
                 {% if post.excerpt %}
                     <p class="card-text">{{ post.excerpt|linebreaks }}</p>
                 {% else %}
