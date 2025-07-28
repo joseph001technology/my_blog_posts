@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post,Comment
 from allauth.socialaccount.forms import SignupForm
 
 
@@ -23,3 +23,11 @@ class MyCustomSocialSignupForm(SignupForm):
         return user
 
 
+
+class NewCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)  # Only let users write comment content
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+        }

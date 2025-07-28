@@ -4,10 +4,16 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from allauth.socialaccount.providers.google.views import oauth2_login
 from .models import Post
 from django.contrib.auth.decorators import login_required
+from .forms import NewCommentForm
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+
 
 def test_func(self):
     user = self.request.user
     return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+
 
 
 def home(request):
@@ -19,14 +25,37 @@ def home(request):
         return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
 
 
-def post_single(request, slug):  # <== This must be 'slug'
+
+def post_single(request, slug):   
     post = get_object_or_404(Post, slug=slug, status='published')
-    return render(request, 'blogtemplates/single.html', {'post': post})
+    comments = post.comments.filter(status=True)
+    user_comment = None
 
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+    if request.method == 'POST':
+        comment_form = NewCommentForm(request.POST)
+        if comment_form.is_valid():
+            if request.user.is_authenticated:
+                user_comment = comment_form.save(commit=False)
+                user_comment.post = post
+                user_comment.name = request.user.username
+                user_comment.email = request.user.email
+                user_comment.save()
 
+                
+                
+                return HttpResponseRedirect(reverse('blog:post_single', args=[post.slug]))
+
+            else:
+                return HttpResponseRedirect('/accounts/login/')  # Optional: redirect to login
+    else:
+        comment_form = NewCommentForm()
+
+    return render(request, 'blogtemplates/single.html', {
+        'post': post,
+        'comments': comments,
+        'user_comment': user_comment,
+        'comment_form': comment_form
+    })
     
     
 

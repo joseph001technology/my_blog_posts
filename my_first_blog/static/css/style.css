@@ -61,10 +61,10 @@ body {
 
 .explore-btn {
   background-color: #6cead1;
-  color: white;
+  color: rgb(0, 0, 0) !important;
   padding: 0.6rem 1.4rem;
-  border: none;
-  border-radius: 30px;
+  border: 2px solid #1780a9!important;
+  border-radius: 5px;
   font-weight: 600;
   transition: background-color 0.3s ease;
 }
