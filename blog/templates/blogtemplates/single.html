@@ -1,9 +1,10 @@
-{% extends 'blogtemplates/base.html' %} 
+{% extends 'blogtemplates/base.html' %}
+{% load mptt_tags %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4 ">
+<div class="container mt-4">
   <h1>Title</h1>
   <h5>{{ post.title }}</h5>
   <p class="text-muted">
@@ -25,30 +26,47 @@
         <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Delete</a>
       {% endif %}
     {% endif %}
-    <!-- ✅ Comments Button styled like others -->
     <button id="toggleComments" class="btn btn-sm btn-outline-secondary explore-btn">Comments</button>
   </div>
 
-  <!-- ✅ Comments Section -->
+  <!-- ✅ MPTT Comments Section -->
   <div id="commentsSection" style="display: none;" class="mt-4">
     {% with comments.count as total_comments %}
       <h4>{{ total_comments }} Comment{{ total_comments|pluralize }}</h4>
     {% endwith %}
 
-    {% for comment in comments %}
-      <div class="mb-3 p-2 border rounded">
-        <strong>{{ comment.name }}</strong>
-        <p>{{ comment.content|linebreaks }}</p>
-      </div>
-    {% empty %}
-      <p>There are no comments for this post.</p>
-    {% endfor %}
+    <div>
+      {% recursetree comments %}
+        <div id="{{ node.id }}" class="mb-3 p-2 border rounded" style="margin-left: {{ node.level|add:"0"|add:"1" }}0px;">
+          <strong>{{ node.name }}</strong>
+          {% if not node.is_root_node %}
+            <span class="text-muted">— replied to {{ node.parent.name }}</span>
+          {% endif %}
+          <span class="text-muted">| {{ node.publish|date:"F j, Y H:i" }}</span>
+          <p>{{ node.content|linebreaks }}</p>
+
+          {% if node.level < 3 %}
+            <button class="btn btn-sm btn-outline-primary explore-btn" onclick="replyForm({{ node.id }})">Reply</button>
+          {% endif %}
+
+          {% if not node.is_leaf_node %}
+            <button class="btn btn-sm btn-outline-secondary explore-btn" onclick="toggleReplies({{ node.id }})">View Replies</button>
+          {% endif %}
+        </div>
+
+        {% if not node.is_leaf_node %}
+          <div id="replies-{{ node.id }}" class="ml-4 children" style="display: none;">
+            {{ children }}
+          </div>
+        {% endif %}
+      {% endrecursetree %}
+    </div>
 
     {% if user.is_authenticated %}
       <h5 class="mt-4">Add Your Comment</h5>
       <form id="myForm" method="post">
         {% csrf_token %}
-        {{ comment_form.as_p }}
+        {{ comment_form.content }}
         <button type="submit" class="btn btn-primary explore-btn">Submit</button>
       </form>
     {% else %}
@@ -61,17 +79,42 @@
   </div>
 </div>
 
-<!-- ✅ Toggle Script -->
+<!-- ✅ JS for Reply Form + Toggle -->
 <script>
+  function replyForm(id) {
+    if (document.getElementById("replyForm")) {
+      document.getElementById("replyForm").remove();
+    }
+
+    const target = document.getElementById(id);
+    target.insertAdjacentHTML('afterend',
+      `<form id="replyForm" class="form-insert py-2" method="post">
+        <div class="d-flex justify-content-between">
+          <h5>Reply:</h5>
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('replyForm').remove()">Close</button>
+        </div>
+        <input type="hidden" name="parent" value="${id}">
+        {% csrf_token %}
+        <label for="id_content">Content:</label>
+        <textarea name="content" cols="40" rows="4" class="form-control mb-2" required></textarea>
+        <button type="submit" class="btn btn-primary explore-btn">Submit</button>
+      </form>`
+    );
+  }
+
+  function toggleReplies(id) {
+    const replyDiv = document.getElementById("replies-" + id);
+    if (replyDiv.style.display === "none") {
+      replyDiv.style.display = "block";
+    } else {
+      replyDiv.style.display = "none";
+    }
+  }
+
   const btn = document.getElementById("toggleComments");
   const section = document.getElementById("commentsSection");
-
   btn.addEventListener("click", () => {
-    if (section.style.display === "none") {
-      section.style.display = "block";
-    } else {
-      section.style.display = "none";
-    }
+    section.style.display = section.style.display === "none" ? "block" : "none";
   });
 </script>
 {% endblock %}
