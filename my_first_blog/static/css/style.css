@@ -145,10 +145,19 @@ body {
   text-decoration: underline;
 }
 
+.post-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;  
+}
+
+
 .single-post-container {
-  background-color: #6bd3c4; /* light yellow */
+  background-color: #6bd3c4;
   padding: 20px;
   border-radius: 8px;
+  width: calc(33.333% - 20px); /* three per row with spacing */
+  box-sizing: border-box;
 }
 
  
@@ -194,4 +203,12 @@ body {
 
 }
 
- 
+
+
+/*  Responsive for small screens*/
+
+@media (max-width: 768px) {
+  .single-post-container {
+    width: 100%;
+  }
+}
