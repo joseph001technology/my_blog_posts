@@ -22,7 +22,7 @@ class Post(models.Model) :#database table
     title = models.CharField(max_length=250)
     excerpt = models.TextField(null=True,blank=True,verbose_name="Excerpt (optional)")
     image = models.ImageField(upload_to=user_directory_path,default='posts/default.png',blank=True,null=True)
-    slug = models.SlugField(max_length=250, unique_for_date='publish',blank=True )
+    slug = models.SlugField(max_length=250, unique_for_date='published_at',blank=True )
     published_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
@@ -55,12 +55,12 @@ class Comment(MPTTModel):
                             null=True, blank=True, related_name='children')
     email = models.EmailField()
     content = models.TextField()
-    publish = models.DateTimeField(auto_now_add=True)
+    published_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
     
     
     class MPTTMeta:
-        order_insertion_by = ['publish']
+        order_insertion_by = ['published_at']
 
     def __str__(self):
             return f'Comment by {self.name}'

@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import NewCommentForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Q
+from .forms import PostSearchForm
 
 
 
@@ -102,3 +104,25 @@ class Delete(DeleteView):
 
 
 
+def post_search(request):
+    form = PostSearchForm()
+    q = ''
+    results = []
+    query = Q()
+    
+    if 'q' in request.GET:
+        form = PostSearchForm(request.GET)
+        
+        if form.is_valid():
+            q = form.cleaned_data['q']
+            
+            if q:
+                query &= Q(title__icontains=q)
+    
+            results = Post.objects.filter(query)
+            
+    return render(request, 'blogtemplates/search.html', {
+        'form': form,
+        'q': q,
+        'results': results
+    })
