@@ -11,19 +11,17 @@ User = get_user_model()
 # Create your models here.
 
 def user_directory_path(instance, filename):
-    return 'posts/{0}/{1}'.format(instance.id, filename)
+    return f'blog/comments/images/{filename}'
 
 
-class Post(models.Model) :#database table
-    objects = models.Manager()  # Default manager
-    published = NewManager()
-# Table columns
 
+class Post(models.Model) : 
+    
     title = models.CharField(max_length=250)
     excerpt = models.TextField(null=True,blank=True,verbose_name="Excerpt (optional)")
     image = models.ImageField(upload_to=user_directory_path,default='posts/default.png',blank=True,null=True)
     slug = models.SlugField(max_length=250, unique_for_date='publish',blank=True )
-    publish = models.DateTimeField(default=timezone.now)
+    published_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
@@ -38,7 +36,7 @@ class Post(models.Model) :#database table
         super().save(*args, **kwargs)
 
     class Meta:
-        ordering = ('-publish',)
+        ordering = ('-published_at',)
 
     def __str__(self):
         return self.title
