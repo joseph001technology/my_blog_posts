@@ -9,6 +9,7 @@ from django.conf.urls.static import static
 urlpatterns = [
      path('', RedirectView.as_view(url='/accounts/login/', permanent=False)),   # Home
     path('admin/', admin.site.urls),
+  path('user/', include(('accounts.urls', 'userauth'), namespace='userauth')),
     path('accounts/', include('allauth.urls')),  # 🔐 Social login
     path('blog/', include(('blog.urls', 'blog'), namespace='blog')),
     path('logout-success/', views.logout_success, name='logout_success'),# Blog app

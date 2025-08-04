@@ -3,72 +3,77 @@
 <html>
 <head>
   <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}My Blog{% endblock %}</title>
  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
   <!-- ✅ Navbar -->
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="#">Dashboard</a>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Dashboard</a>
 
-    <!-- Hamburger toggle button -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Hamburger toggle button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- Collapsible menu -->
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <!-- Collapsible menu -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
 
-        <!-- Home -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'blog:personal_home' %}">Home</a>
-        </li>
-
-        <!-- Posts -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'blog:homepage' %}">Posts</a>
-        </li>
-
-        <!-- Logout -->
-        {% if user.is_authenticated %}
+          <!-- Home -->
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+            <a class="nav-link" href="{% url 'blog:personal_home' %}">Home</a>
           </li>
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'account_login' %}">Login</a>
-          </li>
-        {% endif %}
 
-      </ul>
+          <!-- Posts -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'blog:homepage' %}">Posts</a>
+          </li>
+
+          {% if user.is_authenticated %}
+            <!-- Profile -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'userauth:profile' %}">Profile</a>
+            </li>
+
+            <!-- Logout -->
+            <li class="nav-item">
+              <form method="post" action="{% url 'userauth:logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-link btn btn-link p-0 text-decoration-none">Logout</button>
+              </form>
+            </li>
+          {% else %}
+            <!-- Login -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'userauth:custom_signup' %}">Login</a>
+            </li>
+          {% endif %}
+
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
-<!-- Modal for Expanded Photo -->
-<div class="modal fade" id="profilePhotoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark">
-      <div class="modal-body text-center">
-        <img src="{% static 'images/jose1.jpg' %}" alt="Jose's Full Photo" class="img-fluid rounded">
+  </nav>
+
+  <!-- Modal for Expanded Photo -->
+  <div class="modal fade" id="profilePhotoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark">
+        <div class="modal-body text-center">
+          <img src="{% static 'images/jose1.jpg' %}" alt="Jose's Full Photo" class="img-fluid rounded">
+        </div>
       </div>
     </div>
   </div>
-</div>
 
- 
-  
-   
   {% block content %}
   {% endblock %}
 
-  
   <footer id="contact" class="bg-light text-center py-3 mt-5 border-top">
     <p class="mb-0">
       <strong>Email:</strong> josenkiarie054@gmail.com |
@@ -76,7 +81,7 @@
       <strong>Address:</strong> Nairobi, Thika
     </p>
   </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
