@@ -1,0 +1,32 @@
+ 
+{% extends "base/base.html" %}
+{% block title %}Email Verification Invalid{% endblock title %}
+
+{% block content %}
+<style>
+    .email-container {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        color: #333;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        max-width: 600px;
+        margin: 50px auto;
+        text-align: center;
+    }
+    .email-container h2 {
+        color: #dc3545;
+    }
+    .email-container p {
+        margin-top: 10px;
+        font-size: 16px;
+    }
+</style>
+
+<div class="email-container">
+    <h2>Verification Link Invalid</h2>
+    <p>The confirmation link was invalid — it may have already been used or expired.</p>
+</div>
+{% endblock %}
+

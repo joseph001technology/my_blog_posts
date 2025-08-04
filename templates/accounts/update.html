@@ -1,0 +1,80 @@
+{% extends "../base/base.html" %}
+{% block title %}Edit your account{% endblock %}
+
+{% block content %}
+{% include "base/nav-main.html" %}
+
+<style>
+    .update-form input {
+        border: 2px solid #ccc;
+        height: calc(2em + .75rem + 2px);
+    }
+
+    .update-form input:focus {
+        border-color: #1497ff;
+        box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(20, 151, 255, 0.25);
+    }
+</style>
+
+<div class="container-fluid my-5">
+    <section class="px-md-5 mx-md-5 text-center text-lg-left dark-grey-text">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6">
+
+                <form class="form-reset p-4 rounded update-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <p class="h4 mb-4 font-weight-bold">Change your details</p>
+                    <p>You can edit your account using the following form:</p>
+
+                    {% if user_form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            Please correct the errors below.
+                        </div>
+                    {% elif messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <label class="small font-weight-bold">{{ user_form.first_name.label }}</label>
+                    {{ user_form.first_name }}
+                    {% for error in user_form.first_name.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+
+                    <label class="small font-weight-bold">{{ user_form.last_name.label }}</label>
+                    {{ user_form.last_name }}
+                    {% for error in user_form.last_name.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+
+                    <label class="small font-weight-bold">{{ user_form.email.label }}</label>
+                    {{ user_form.email }}
+                    {% for error in user_form.email.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+
+                    <button class="btn btn-primary btn-block py-2 mb-4 mt-5 font-weight-bold" type="submit">
+                        Save Changes
+                    </button>
+
+                    <hr class="mb-3">
+
+                    <p class="h5 mb-2 pt-4 font-weight-bold">Delete Account</p>
+                    <p class="small">If you would like to delete your account, press the button below:</p>
+                    <a href="{% url 'userauth:deleteuser' %}"
+                       class="btn btn-danger btn-block py-2 mb-4 mt-3 font-weight-bold" role="button">
+                        Delete Account
+                    </a>
+                </form>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include "base/footer.html" %}
+{% endblock %}

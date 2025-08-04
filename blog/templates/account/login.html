@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Sign input</title>
   </head>
   <body>
 
@@ -31,6 +31,10 @@
                 <a href="{% provider_login_url 'google' %}" class="btn btn btn-danger btn-lg btn-block" role="button" aria-pressed="true">Sign in with Google</a>
                 <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
               </form>
+              <p class="small text-center">
+               Don't have an account?
+                <a href="{% url 'userauth:register' %}">Register here</a>.
+              </p>
           </div>
         </div>
       </div>
