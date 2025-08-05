@@ -3,11 +3,22 @@
 
 {% block content %}
 <style>
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     .mobile-img-small {
       width: 50% !important;
       margin: 0 auto;
     }
+  }
+
+  .img-wrapper {
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .img-wrapper img {
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 </style>
 
@@ -23,8 +34,15 @@
   <div class="row align-items-start mb-5">
     <!-- Image on Right (First on mobile) -->
     <div class="col-md-6 order-1 order-md-2 text-center mb-4 mb-md-0">
-      <div class="d-inline-block">
-        <img src="{% static 'images/jose1.jpg' %}" alt="Hero Image" class="img-fluid rounded-4 mobile-img-small" />
+      <div class="img-wrapper">
+        <img
+          src="{% static 'images/jose1.jpg' %}"
+          alt="Hero Image"
+          class="img-fluid rounded-4 mobile-img-small"
+          loading="lazy"
+          width="500"
+          height="500"
+        />
       </div>
     </div>
 
