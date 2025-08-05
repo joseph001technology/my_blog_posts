@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block content %}
+<style>
+  @media (max-width: 768px) {
+    .mobile-img-small {
+      width: 50% !important;
+      margin: 0 auto;
+    }
+  }
+</style>
+
 <div class="container my-5 px-3">
   <section class="hero text-center mb-5">
     <h6 class="text-muted">Hi, my name is</h6>
@@ -11,33 +20,34 @@
     <a href="mailto:josenkiarie054@gmail.com" class="btn btn-primary mt-4 px-4 py-2 rounded-pill shadow-sm">Get in touch</a>
   </section>
 
-  <div class="hero-image-container text-center mb-5">
-    <img src="{% static 'images/jose1.jpg' %}" alt="Hero Image" class="hero-image img-fluid shadow-sm" style="width: 100%; border-radius: 0;" />
-  </div>
+  <div class="row align-items-start mb-5">
+    <!-- Image on Right (First on mobile) -->
+    <div class="col-md-6 order-1 order-md-2 text-center mb-4 mb-md-0">
+      <div class="d-inline-block">
+        <img src="{% static 'images/jose1.jpg' %}" alt="Hero Image" class="img-fluid rounded-4 mobile-img-small" />
+      </div>
+    </div>
 
-  <section class="about mb-5 bg-white rounded-4 shadow-sm p-4">
-    <h2 class="section-title">About Me</h2>
-    <p><strong>Welcome to my space on the web!</strong></p>
-    <p>I’m currently a student pursuing a Bachelor of Business Information Technology (BBIT) — a unique intersection of business and tech that’s helped shape my approach to solving real-world problems through code. Along the way, I’ve grown into a full-stack web developer, with hands-on experience building intuitive, scalable, and responsive applications across both frontend and backend.</p>
-    <p>This site is a blend of my journey, projects, experiments, and thoughts as I continue evolving in the world of software development. Here, you’ll find personal and technical blog posts, as well as a portfolio of the projects I’ve worked on — from practical business tools to problem-solving platforms aimed at real users. I build not just to learn, but to create things that matter.</p>
-    <p>💻 <strong>What I Do</strong><br>
-    While still a student, I’ve actively taken on freelance and personal projects that mimic real-world complexity — building CRUD systems, blog platforms, USSD-driven tools, crop marketplace apps for farmers, and more. I focus on clean architecture, efficient data flow, and user-first design.</p>
-    <p>I enjoy working on end-to-end web applications, from setting up backend logic and APIs, to designing sleek and responsive frontends.</p>
-    <p>🌍 <strong>Why I Build</strong><br>
-    I’m passionate about building solutions that are simple, impactful, and real. I often explore ideas that empower underrepresented communities — such as creating tech tools for small-scale farmers or simplifying digital access through mobile-first solutions.</p>
-    <p>As someone learning both the technical and business side of tech, I’m drawn to projects that require thoughtful integration of systems, scalability, and user strategy.</p>
-    <p>🧠 <strong>Always Learning</strong><br>
-    Technology moves fast — and I enjoy keeping pace. Outside of formal coursework, I constantly explore new tools and frameworks, and dive into topics like APIs, authentication, deployment, and automation. Whether I’m debugging a stubborn Django error or experimenting with a new UI approach, I treat every challenge as an opportunity to grow.</p>
-    <p>✨ <strong>Beyond the Code</strong><br>
-    When I’m not buried in VS Code or pushing commits to GitHub, you’ll find me:<br>
-    Brainstorming side projects<br>
-    Reading about tech, business, or philosophy<br>
-    Taking walks, listening to music, or exploring new places<br>
-    Connecting with other devs and sharing ideas</p>
-    <p>🙌 <strong>Let’s Build Something Awesome</strong><br>
-    I’m just getting started — and the best projects are yet to come. Whether you’re a fellow developer, student, or someone with an idea to build out, I’d love to connect.
-    Let’s create solutions that are functional, elegant, and built to last.</p>
-  </section>
+    <!-- About Me on Left (Second on mobile) -->
+    <div class="col-md-6 order-2 order-md-1">
+      <section class="about bg-white rounded-4 shadow-sm p-4 h-100">
+        <h2 class="section-title">About Me</h2>
+        <p><strong>Welcome to my space on the web!</strong></p>
+        <p>I’m a BBIT student passionate about creating clean, functional web solutions. My focus lies in full-stack development — building both the backend logic and the frontend interface.</p>
+        <p>This site is my digital journal where I share my projects, ideas, and experiments in tech. I believe in building with purpose — whether it's a tool for small-scale farmers or a responsive blog platform.</p>
+        <p>💻 <strong>What I Do</strong><br>
+        From freelance tasks to personal builds, I develop real-world web apps using Django and Bootstrap — always prioritizing clean architecture and usability.</p>
+        <p>🌍 <strong>Why I Build</strong><br>
+        My work is driven by the goal to simplify life through tech — especially for underserved users. I love solving problems with smart, user-centered solutions.</p>
+        <p>🧠 <strong>Always Learning</strong><br>
+        I explore tools like APIs, authentication, and automation. Every challenge, from deployment to debugging, adds to my growth.</p>
+        <p>✨ <strong>Beyond the Code</strong><br>
+        Outside dev work, I enjoy ideating new projects, reading, walking, music, and connecting with fellow tech minds.</p>
+        <p>🙌 <strong>Let’s Build Something Awesome</strong><br>
+        Whether you're a fellow dev, student, or innovator — I'm open to collaborations and learning together. Let’s connect!</p>
+      </section>
+    </div>
+  </div>
 
   <section class="skills bg-white rounded-4 shadow-sm p-4 mb-5">
     <h3 class="section-title">Skills & Technologies</h3>
