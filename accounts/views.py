@@ -9,6 +9,8 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .forms import RegistrationForm, UserEditForm
 from .tokens import account_activation_token
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 @login_required
@@ -77,3 +79,17 @@ def activate(request, uidb64, token):
         return redirect('userauth:profile')
     else:
         return render(request, 'registration/activation_invalid.html')
+
+
+@login_required
+def custom_password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            return redirect('userauth:password_change_done')  # 👈 Redirect here
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'registration/password_change_form.html', {'form': form})
+

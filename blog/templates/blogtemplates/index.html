@@ -35,7 +35,7 @@
     <h2>All Posts</h2>
     <div class="post-grid"> 
         {% for post in posts %}
-            <div class="card mb-3 single-post-container">
+            <div class="card mb-3 single-post-container post-bg">
                 <div class="card-body">
                     <h4 class="card-title">
                         <a href="{% url 'blog:post_single' post.slug %}" class="text-decoration-none text-dark">
