@@ -16,7 +16,7 @@
     min-height: 100vh;
     padding-top: 1rem;
     position: fixed;
-    top: 0;
+    top: 56px; /* Adjusted to appear below top nav */
     left: 0;
     width: 220px;
     z-index: 1030;
@@ -43,14 +43,40 @@
   .content {
     margin-left: 220px;
     padding: 2rem;
+    padding-top: 80px;
   }
 
-  /* Mobile */
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #3a7d82;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1040;
+    color: white;
+  }
+
+  .topbar .avatar {
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  .dropdown-menu a {
+    color: #333;
+  }
+
   @media (max-width: 768px) {
     .sidebar {
-      position: absolute;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
+      top: 56px;
     }
 
     .sidebar.show {
@@ -59,19 +85,7 @@
 
     .content {
       margin-left: 0;
-    }
-
-    .navbar-toggler {
-      margin-left: 1rem;
-    }
-
-    .mobile-header {
-      background-color: #3a7d82;
-      color: white;
-    }
-
-    .mobile-header .navbar-brand {
-      color: white;
+      padding-top: 100px;
     }
 
     .navbar-toggler-icon {
@@ -80,57 +94,53 @@
   }
 </style>
 
-<!-- Mobile Navbar -->
-<nav class="navbar navbar-dark d-md-none mobile-header shadow-sm">
-  <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand ms-2" href="/">Demo</a>
+<!-- Topbar (Single Navbar) -->
+<nav class="navbar navbar-expand-md topbar shadow-sm">
+  <div class="d-flex align-items-center">
+    <button class="navbar-toggler me-3" type="button" onclick="toggleSidebar()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <span class="fw-bold fs-5">Profile</span>
+  </div>
+
+  {% if request.user.is_authenticated %}
+  <div class="dropdown">
+    <a href="#" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+      {% if request.user.profile.avatar %}
+        <img src="{{ request.user.profile.avatar.url }}" alt="Avatar" class="avatar">
+      {% else %}
+        <img src="https://via.placeholder.com/36" alt="Avatar" class="avatar">
+      {% endif %}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+      <li><a class="dropdown-item" href="{% url 'userauth:profile' %}">Dashboard</a></li>
+      <li><a class="dropdown-item" href="{% url 'userauth:edit' %}">Edit Details</a></li>
+      <li><a class="dropdown-item" href="{% url 'userauth:pwdforgot' %}">Change Password</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+    </ul>
+  </div>
+  {% endif %}
 </nav>
 
 <!-- Sidebar -->
 <div class="sidebar shadow-sm">
-  <div class="navbar-brand">Demo</div>
   <ul class="nav flex-column mt-3">
-    <li class="nav-item">
-      <a class="nav-link" href="#">Features</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Enterprise</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Support</a>
-    </li>
-
     {% if request.user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'userauth:profile' %}">Dashboard</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'blog:personal_home' %}">Blog</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'userauth:edit' %}">Edit Details</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'userauth:pwdforgot' %}">Change Password</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
-      </li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'userauth:profile' %}">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Enterprise</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'blog:personal_home' %}">Blog</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
     {% else %}
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'userauth:register' %}">Register</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'login' %}">Login</a>
-      </li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'userauth:register' %}">Register</a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
     {% endif %}
   </ul>
 </div>
 
- 
-<!-- JavaScript to close sidebar when clicking outside -->
+<!-- JavaScript to toggle sidebar on mobile -->
 <script>
   function toggleSidebar() {
     document.querySelector('.sidebar').classList.toggle('show');
@@ -139,15 +149,16 @@
   document.addEventListener('click', function (e) {
     const sidebar = document.querySelector('.sidebar');
     const toggleBtn = document.querySelector('.navbar-toggler');
-
-    // Only run on mobile view
     if (window.innerWidth <= 768) {
-      const isClickInsideSidebar = sidebar.contains(e.target);
-      const isClickOnToggle = toggleBtn.contains(e.target);
-
-      if (!isClickInsideSidebar && !isClickOnToggle) {
+      if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
         sidebar.classList.remove('show');
       }
     }
   });
 </script>
+
+<!-- Main Content -->
+<div class="content">
+  {% block content %}
+  {% endblock %}
+</div>

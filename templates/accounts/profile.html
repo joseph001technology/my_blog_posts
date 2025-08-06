@@ -1,21 +1,75 @@
 {% extends "../base/base.html" %}
 {% block title %}Profile{% endblock %}
+
 {% block content %}
 {% include "../base/nav-main.html" %}
-<div class="container">
-    <section class="jumbotron text-center bg-white">
-        <!-- Page Content -->
-<div class="content">
-  <h1 class="text-success">Welcome to the Dashboard</h1>
-  <p>This is your main content area.</p>
+
+<style>
+  /* Prevent horizontal scrolling */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Content layout fix */
+  .dashboard-container {
+    margin-left: 220px;
+    padding-top: 20px;
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  /* Fix for mobile view */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      margin-left: 0;
+      padding-top: 0px; /* Add enough padding to clear top nav */
+    }
+
+    .dashboard-card {
+      margin: 0 10px;
+    }
+
+    .dropdown-menu {
+      left: auto !important;
+      right: 10px !important;
+    }
+  }
+</style>
+
+<!-- Main Content Area -->
+<div class="dashboard-container">
+
+  <!-- Section Card -->
+  <section class="jumbotron bg-white p-4 rounded shadow-sm dashboard-card">
+
+    <!-- Header Text -->
+    <h1 class="text-success">Welcome to the Dashboard</h1>
+    <p class="mb-4">This is your main content area.</p>
+
+    <!-- User Info Text -->
+    <div>
+      <h2>User Dashboard</h2>
+      <p class="lead text-muted">
+        Welcome to your account dashboard. This is your personal space to manage everything related to your user profile.
+        From here, you can update your personal information, change your password, manage your login credentials, or even
+        deactivate your account if needed.
+      </p>
+      <p class="text-muted">
+        It's designed to give you full control over your data and account preferences in a secure and straightforward way.
+        Take a moment to review your details and keep your account up to date.
+      </p>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-4">
+      <a href="{% url 'blog:personal_home' %}" class="btn btn-outline-success">
+        ← Back to Blog
+      </a>
+    </div>
+
+  </section>
 </div>
 
-        <div class="container">
-            <h1>User Dashboard</h1>
-            <p class="lead text-muted">Welcome to your account dashboard. This is your personal space to manage everything related to your user profile. From here, you can update your personal information, change your password, manage your login credentials, or even deactivate your account if needed. It's designed to give you full control over your data and account preferences in a secure and straightforward way. Take a moment to review your details and keep your account up to date.</p>
-            
-        </div>
-    </section>
-</div>
 {% include "base/footer.html" %}
 {% endblock %}
+

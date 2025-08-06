@@ -7,10 +7,25 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from .forms import RegistrationForm, UserEditForm
+from .forms import RegistrationForm, UserEditForm,UserProfileForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from .models import Profile
+
+
+def avatar(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user)
+        avatar = Profile.objects.filter(user=user)
+        context = {
+            "avatar": avatar,
+        }
+        return context
+    else:
+        return {
+            'NotLoggedIn': User.objects.none()
+        }
 
 
 @login_required
@@ -21,13 +36,22 @@ def profile(request):
 @login_required
 def edit(request):
     if request.method == 'POST':
-        user_form = UserEditForm(instance=request.user, data=request.POST)
-        if user_form.is_valid():
+        user_form = UserEditForm(instance=request.user,
+                                 data=request.POST)
+
+        profile_form = UserProfileForm(
+            request.POST, request.FILES, instance=request.user.profile)
+
+        if profile_form.is_valid() and user_form.is_valid():
             user_form.save()
-            return redirect('userauth:profile')  # Redirect after saving
+            profile_form.save()
     else:
         user_form = UserEditForm(instance=request.user)
-    return render(request, 'accounts/update.html', {'user_form': user_form})
+        profile_form = UserProfileForm(instance=request.user.profile)
+
+    return render(request,
+                  'accounts/update.html',
+                  {'user_form': user_form, 'profile_form': profile_form})
 
 
 @login_required
