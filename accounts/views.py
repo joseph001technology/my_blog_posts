@@ -117,3 +117,7 @@ def custom_password_change(request):
         form = PasswordChangeForm(user=request.user)
     return render(request, 'registration/password_change_form.html', {'form': form})
 
+
+def password_reset_done(request):
+    return render(request, 'registration/password_reset_done.html')
+
