@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'django_summernote',  
 ]
 
+SUMMERNOTE_CONFIG = {
+    'attachment_absolute_uri': True,
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -128,7 +132,7 @@ STATICFILES_DIRS = [
 ]
 
 # Sites and Redirects
-SITE_ID = 4
+SITE_ID = 5
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/home/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/logout-success/'

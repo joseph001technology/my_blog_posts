@@ -1,5 +1,6 @@
 {% extends 'blogtemplates/base.html' %}
 {% load mptt_tags %}
+{% load static %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -66,7 +67,7 @@
       <h5 class="mt-4">Add Your Comment</h5>
       <form id="myForm" method="post">
         {% csrf_token %}
-        {{ comment_form.content }}
+        {{ comment_form.content }}  {# This renders the Summernote widget via the form #}
         <button type="submit" class="btn btn-primary explore-btn">Submit</button>
       </form>
     {% else %}
@@ -78,6 +79,10 @@
     <a href="{% url 'blog:homepage' %}" class="btn btn-secondary explore-btn">← Back to Home</a>
   </div>
 </div>
+
+<!-- Summernote CSS/JS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.js"></script>
 
 <!-- ✅ JS for Reply Form + Toggle -->
 <script>
@@ -96,10 +101,22 @@
         <input type="hidden" name="parent" value="${id}">
         {% csrf_token %}
         <label for="id_content">Content:</label>
-        <textarea name="content" cols="40" rows="4" class="form-control mb-2" required></textarea>
+        <textarea name="content" id="replyContent" cols="40" rows="4" class="form-control mb-2" required></textarea>
         <button type="submit" class="btn btn-primary explore-btn">Submit</button>
       </form>`
     );
+
+    // Initialize Summernote on the reply textarea
+    $('#replyContent').summernote({
+      height: 150,
+      toolbar: [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['insert', ['link', 'picture']],
+        ['view', ['fullscreen', 'codeview']]
+      ]
+    });
   }
 
   function toggleReplies(id) {
@@ -115,6 +132,20 @@
   const section = document.getElementById("commentsSection");
   btn.addEventListener("click", () => {
     section.style.display = section.style.display === "none" ? "block" : "none";
+  });
+
+  // Initialize Summernote on the main comment form content field
+  document.addEventListener('DOMContentLoaded', function () {
+    $('textarea[name="content"]').summernote({
+      height: 150,
+      toolbar: [
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['insert', ['link', 'picture']],
+        ['view', ['fullscreen', 'codeview']]
+      ]
+    });
   });
 </script>
 {% endblock %}

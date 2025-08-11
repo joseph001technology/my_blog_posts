@@ -29,22 +29,19 @@ class NewCommentForm(forms.ModelForm):
     parent = TreeNodeChoiceField(
         queryset=Comment.objects.all(),
         required=False,
-        widget=forms.CharField(widget=SummernoteWidget())
+        label='',  # Remove label in __init__ is fine too
     )
 
     class Meta:
         model = Comment
         fields = ('parent', 'content')
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'content': SummernoteWidget(),  # Use Summernote for content
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['parent'].label = ''
-        
-        
- 
+        self.fields['parent'].label = ''  # Optional to hide parent label
 
 class PostSearchForm(forms.Form):
     q = forms.CharField()
