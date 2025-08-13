@@ -27,10 +27,28 @@ def home(request):
         return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
 
 
-
 def post_single(request, slug):   
     post = get_object_or_404(Post, slug=slug, status='published')
-    comments = post.comments.filter(status=True)
+    
+    # Favourite logic
+    fav = False
+    if request.user.is_authenticated:
+        if post.favourites.filter(id=request.user.id).exists():
+            fav = True
+
+    # Comments
+    allcomments = post.comments.filter(status=True)
+    page = request.GET.get('page', 1)
+
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    paginator = Paginator(allcomments, 10)
+    try:
+        comments = paginator.page(page)
+    except PageNotAnInteger:
+        comments = paginator.page(1)
+    except EmptyPage:
+        comments = paginator.page(paginator.num_pages)
+
     user_comment = None
 
     if request.method == 'POST':
@@ -43,12 +61,9 @@ def post_single(request, slug):
                 user_comment.email = request.user.email
                 user_comment.save()
 
-                
-                
                 return HttpResponseRedirect(reverse('blog:post_single', args=[post.slug]))
-
             else:
-                return HttpResponseRedirect('/accounts/login/')  # Optional: redirect to login
+                return HttpResponseRedirect('/accounts/login/')
     else:
         comment_form = NewCommentForm()
 
@@ -56,10 +71,11 @@ def post_single(request, slug):
         'post': post,
         'comments': comments,
         'user_comment': user_comment,
-        'comment_form': comment_form
+        'comment_form': comment_form,
+        'fav': fav,
+        'allcomments': allcomments
     })
-    
-    
+
 
 def logout_success(request):
     return render(request, 'blogtemplates/logout_success.html')

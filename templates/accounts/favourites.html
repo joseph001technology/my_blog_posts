@@ -1,0 +1,57 @@
+{% extends "../base/base.html" %} 
+{% block title %}Users Favourites{% endblock %}
+
+{% block content %}
+{% include "../base/nav-main.html" %}
+
+<div class="container">
+    <section class="jumbotron text-center bg-white">
+        <div class="container">
+            <h1>Users saved favourite posts</h1>
+            <p class="lead text-muted">Here you can remove or view the favourite posts you have added</p>
+        </div>
+    </section>
+
+    <div class="row">
+        {% for post in new %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <a class="text-dark" href="{% url 'blog:post_single' post.slug %}">
+                    {% if post.image %}
+                    <img class="card-img-top" src="{{ post.image.url }}" alt="{{ post.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h2 style="font-size:18px; font-weight:bold;">{{ post.title|truncatechars:50 }}</h2>
+                        <p class="card-text">{{ post.excerpt|truncatechars:50 }}</p>
+                    </div>
+                </a>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <small class="text-muted">9 mins</small>
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'userauth:favourite_add' post.id %}" class="btn btn-outline-primary btn-sm">
+                        Remove
+                    </a>
+                    {% else %}
+                    <a href="{% url 'account_login' %}" class="btn btn-outline-secondary btn-sm">
+                        Login to Remove
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center text-muted">No favourite posts found.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'blog:homepage' %}" class="btn btn-primary explore-btn">
+            ← Back to Posts
+        </a>
+    </div>
+</div>
+
+{% include "base/footer.html" %}
+{% endblock %}

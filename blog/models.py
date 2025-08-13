@@ -26,6 +26,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     content = models.TextField()
     status = models.CharField(max_length=10, choices=CHOICES, default=DRAFT)
+    favourites = models.ManyToManyField(
+        User, related_name='favourite', default=None, blank=True)
     newmanager = NewManager()
 
     def save(self, *args, **kwargs):

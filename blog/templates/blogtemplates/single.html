@@ -1,4 +1,4 @@
-{% extends 'blogtemplates/base.html' %}
+{% extends 'blogtemplates/base.html' %}  
 {% load mptt_tags %}
 {% load static %}
 
@@ -8,8 +8,34 @@
 <div class="container mt-4">
   <h1>Title</h1>
   <h5>{{ post.title }}</h5>
-  <p class="text-muted">
-    By {{ post.author }} | Published on {{ post.published_at|date:"F j, Y" }}
+  <p class="text-muted d-flex justify-content-between align-items-center">
+    <span>By {{ post.author }} | Published on {{ post.published_at|date:"F j, Y" }}</span>
+
+    <div class="d-flex align-items-center">
+      <!-- ✅ Favourites Button at top right -->
+      {% if user.is_authenticated %}
+        {% if fav %}
+          <a href="{% url 'userauth:favourite_list' %}" class="btn btn-outline-danger me-2 explore-btn">
+            Remove Favourites
+            <img src="/media/posts/like1.png" alt="favourite" style="width:20px; height:20px; vertical-align: middle;">
+          </a>
+        {% else %}
+          <a href="{% url 'userauth:favourite_add' post.id %}" class="btn btn-outline-primary me-2 explore-btn">
+            Add to Favourites
+            <img src="/media/posts/like2.png" alt="favourite" style="width:20px; height:20px; vertical-align: middle;">
+          </a>
+        {% endif %}
+        <!-- ✅ View Favourites Button -->
+        <a href="{% url 'userauth:favourite_list' %}" class="btn btn-outline-secondary explore-btn">
+          View Favourites
+        </a>
+      {% else %}
+        <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary explore-btn me-2">
+          Add to Favourites
+          <img src="/media/posts/like2.png" alt="favourite" style="width:20px; height:20px; vertical-align: middle;">
+        </a>
+      {% endif %}
+    </div>
   </p>
 
   {% if post.image %}
@@ -19,16 +45,7 @@
   <hr>
   <h2>Content</h2>
   <p>{{ post.content|linebreaks }}</p>
-
-  <div class="btn-group button">
-    {% if user.is_authenticated %}
-      {% if user.username == "josephkiarie" or user.is_superuser %}
-        <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Edit</a>
-        <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Delete</a>
-      {% endif %}
-    {% endif %}
-    <button id="toggleComments" class="btn btn-sm btn-outline-secondary explore-btn">Comments</button>
-  </div>
+ 
 
   <!-- ✅ MPTT Comments Section -->
   <div id="commentsSection" style="display: none;" class="mt-4">
@@ -67,7 +84,7 @@
       <h5 class="mt-4">Add Your Comment</h5>
       <form id="myForm" method="post">
         {% csrf_token %}
-        {{ comment_form.content }}  {# This renders the Summernote widget via the form #}
+        {{ comment_form.content }}
         <button type="submit" class="btn btn-primary explore-btn">Submit</button>
       </form>
     {% else %}
@@ -106,7 +123,6 @@
       </form>`
     );
 
-    // Initialize Summernote on the reply textarea
     $('#replyContent').summernote({
       height: 150,
       toolbar: [
@@ -121,11 +137,7 @@
 
   function toggleReplies(id) {
     const replyDiv = document.getElementById("replies-" + id);
-    if (replyDiv.style.display === "none") {
-      replyDiv.style.display = "block";
-    } else {
-      replyDiv.style.display = "none";
-    }
+    replyDiv.style.display = replyDiv.style.display === "none" ? "block" : "none";
   }
 
   const btn = document.getElementById("toggleComments");
@@ -134,7 +146,6 @@
     section.style.display = section.style.display === "none" ? "block" : "none";
   });
 
-  // Initialize Summernote on the main comment form content field
   document.addEventListener('DOMContentLoaded', function () {
     $('textarea[name="content"]').summernote({
       height: 150,
@@ -148,4 +159,5 @@
     });
   });
 </script>
+
 {% endblock %}

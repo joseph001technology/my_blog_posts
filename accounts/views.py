@@ -11,7 +11,28 @@ from .forms import RegistrationForm, UserEditForm,UserProfileForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+from blog.models import Post
 from .models import Profile
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+ 
+
+
+@ login_required
+def favourite_list(request):
+    new = Post.newmanager.filter(favourites=request.user)
+    return render(request,
+                  'accounts/favourites.html',
+                  {'new': new})
+    
+    
+@ login_required
+def favourite_add(request, id):
+    post = get_object_or_404(Post, id=id)
+    if post.favourites.filter(id=request.user.id).exists():
+        post.favourites.remove(request.user)
+    else:
+        post.favourites.add(request.user)
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 def avatar(request):
