@@ -28,6 +28,9 @@ class Post(models.Model):
     status = models.CharField(max_length=10, choices=CHOICES, default=DRAFT)
     favourites = models.ManyToManyField(
         User, related_name='favourite', default=None, blank=True)
+    thumbsup = models.IntegerField(default='0')
+    thumbsdown = models.IntegerField(default='0')
+    thumbs = models.ManyToManyField(User, related_name='thumbs', default=None, blank=True)
     newmanager = NewManager()
 
     def save(self, *args, **kwargs):
@@ -68,3 +71,17 @@ class Comment(MPTTModel):
 
     def __str__(self):
         return f'Comment by {self.name}'
+
+
+
+
+class Vote(models.Model):
+
+    post = models.ForeignKey(Post, related_name='postid',
+                             on_delete=models.CASCADE, default=None, blank=True)
+    user = models.ForeignKey(User, related_name='userid',
+                             on_delete=models.CASCADE, default=None, blank=True)
+    vote = models.BooleanField(default=True)
+    
+    class Meta:
+        unique_together = ('post', 'user')  # Each user can vote once per post

@@ -11,10 +11,92 @@ from .forms import RegistrationForm, UserEditForm,UserProfileForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from blog.models import Post
+from blog.models import Post,Vote
 from .models import Profile
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
- 
+from django.http import JsonResponse
+from django.db.models import F
+from django.db.models import Q
+
+
+@login_required
+def thumbs(request):
+    if request.POST.get('action') == 'thumbs':
+        id = int(request.POST.get('postid'))
+        button = request.POST.get('button')
+        update = get_object_or_404(Post, id=id)
+
+        # Check if user already voted
+        if update.thumbs.filter(id=request.user.id).exists():
+
+            # Get vote safely
+            q = Vote.objects.filter(
+                Q(post_id=id) & Q(user_id=request.user.id)
+            ).first()
+
+            if not q:
+                # safety fallback
+                return JsonResponse({'error': 'Vote not found'}, status=400)
+
+            evote = q.vote
+
+            if evote is True:
+                if button == 'thumbsup':
+                    update.thumbsup = F('thumbsup') - 1
+                    update.thumbs.remove(request.user)
+                    update.save()
+                    update.refresh_from_db()
+                    up = update.thumbsup
+                    down = update.thumbsdown
+                    q.delete()
+                    return JsonResponse({'up': up, 'down': down, 'remove': 'none'})
+
+                if button == 'thumbsdown':
+                    update.thumbsup = F('thumbsup') - 1
+                    update.thumbsdown = F('thumbsdown') + 1
+                    update.save()
+                    q.vote = False
+                    q.save(update_fields=['vote'])
+                    update.refresh_from_db()
+                    return JsonResponse({'up': update.thumbsup, 'down': update.thumbsdown})
+
+            if evote is False:
+                if button == 'thumbsup':
+                    update.thumbsup = F('thumbsup') + 1
+                    update.thumbsdown = F('thumbsdown') - 1
+                    update.save()
+                    q.vote = True
+                    q.save(update_fields=['vote'])
+                    update.refresh_from_db()
+                    return JsonResponse({'up': update.thumbsup, 'down': update.thumbsdown})
+
+                if button == 'thumbsdown':
+                    update.thumbsdown = F('thumbsdown') - 1
+                    update.thumbs.remove(request.user)
+                    update.save()
+                    update.refresh_from_db()
+                    q.delete()
+                    return JsonResponse({'up': update.thumbsup, 'down': update.thumbsdown, 'remove': 'none'})
+
+        else:  # New vote
+            if button == 'thumbsup':
+                update.thumbsup = F('thumbsup') + 1
+                update.thumbs.add(request.user)
+                update.save()
+                Vote.objects.create(post_id=id, user_id=request.user.id, vote=True)
+            else:
+                update.thumbsdown = F('thumbsdown') + 1
+                update.thumbs.add(request.user)
+                update.save()
+                Vote.objects.create(post_id=id, user_id=request.user.id, vote=False)
+
+            update.refresh_from_db()
+            return JsonResponse({'up': update.thumbsup, 'down': update.thumbsdown})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+
+
 
 
 @ login_required
