@@ -74,7 +74,7 @@ urlpatterns = [
     path('profile/edit/', views.edit, name='edit'),
     path('fav/<int:id>/', views.favourite_add, name='favourite_add'),
     path('profile/favourites/', views.favourite_list, name='favourite_list'),
-    path('thumbs/', views.thumbs, name='thumbs'),
+     path("thumbs/", views.thumbs, name="thumbs"),
     path('profile/delete/', views.delete_user, name='deleteuser'),
     path('register/', views.accounts_register, name='register'),
     path(
