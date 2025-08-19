@@ -1,4 +1,4 @@
-{% extends 'blogtemplates/base.html' %}  
+{% extends 'blogtemplates/base.html' %}
 {% load mptt_tags %}
 {% load static %}
 
@@ -44,8 +44,17 @@
 
   <hr>
   <h2>Content</h2>
-  <p>{{ post.content|linebreaks }}</p>
- 
+  <div>{{ post.content|safe }}</div>
+
+  <div class="btn-group button">
+    {% if user.is_authenticated %}
+      {% if user.username == "josephkiarie" or user.is_superuser %}
+        <a href="{% url 'blog:edit' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Edit</a>
+        <a href="{% url 'blog:delete' post.pk %}" class="btn btn-sm btn-outline-secondary explore-btn">Delete</a>
+      {% endif %}
+    {% endif %}
+    <button id="toggleComments" class="btn btn-sm btn-outline-secondary explore-btn">Comments</button>
+  </div>
 
   <!-- ✅ MPTT Comments Section -->
   <div id="commentsSection" style="display: none;" class="mt-4">
@@ -61,7 +70,7 @@
             <span class="text-muted">— replied to {{ node.parent.name }}</span>
           {% endif %}
           <span class="text-muted">| {{ node.published_at|date:"F j, Y H:i" }}</span>
-          <p>{{ node.content|linebreaks }}</p>
+          <div>{{ node.content|safe }}</div>
 
           {% if node.level < 3 %}
             <button class="btn btn-sm btn-outline-primary explore-btn" onclick="replyForm({{ node.id }})">Reply</button>
@@ -97,10 +106,6 @@
   </div>
 </div>
 
-<!-- Summernote CSS/JS -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.js"></script>
-
 <!-- ✅ JS for Reply Form + Toggle -->
 <script>
   function replyForm(id) {
@@ -118,26 +123,19 @@
         <input type="hidden" name="parent" value="${id}">
         {% csrf_token %}
         <label for="id_content">Content:</label>
-        <textarea name="content" id="replyContent" cols="40" rows="4" class="form-control mb-2" required></textarea>
+        <textarea name="content" cols="40" rows="4" class="form-control mb-2" required></textarea>
         <button type="submit" class="btn btn-primary explore-btn">Submit</button>
       </form>`
     );
-
-    $('#replyContent').summernote({
-      height: 150,
-      toolbar: [
-        ['style', ['bold', 'italic', 'underline', 'clear']],
-        ['font', ['strikethrough', 'superscript', 'subscript']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['insert', ['link', 'picture']],
-        ['view', ['fullscreen', 'codeview']]
-      ]
-    });
   }
 
   function toggleReplies(id) {
     const replyDiv = document.getElementById("replies-" + id);
-    replyDiv.style.display = replyDiv.style.display === "none" ? "block" : "none";
+    if (replyDiv.style.display === "none") {
+      replyDiv.style.display = "block";
+    } else {
+      replyDiv.style.display = "none";
+    }
   }
 
   const btn = document.getElementById("toggleComments");
@@ -145,19 +143,5 @@
   btn.addEventListener("click", () => {
     section.style.display = section.style.display === "none" ? "block" : "none";
   });
-
-  document.addEventListener('DOMContentLoaded', function () {
-    $('textarea[name="content"]').summernote({
-      height: 150,
-      toolbar: [
-        ['style', ['bold', 'italic', 'underline', 'clear']],
-        ['font', ['strikethrough', 'superscript', 'subscript']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['insert', ['link', 'picture']],
-        ['view', ['fullscreen', 'codeview']]
-      ]
-    });
-  });
 </script>
-
 {% endblock %}
