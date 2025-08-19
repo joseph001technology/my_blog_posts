@@ -1,10 +1,10 @@
-{% extends "../base/base.html" %} 
+{% extends "../base/base.html" %}
 {% block title %}Users Favourites{% endblock %}
 
 {% block content %}
 {% include "../base/nav-main.html" %}
 
-<div class="container">
+<div class="container favourites-container">
     <section class="jumbotron text-center bg-white">
         <div class="container">
             <h1>Users saved favourite posts</h1>
@@ -15,14 +15,14 @@
     <div class="row">
         {% for post in new %}
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
+            <div class="card h-100 shadow-sm">
                 <a class="text-dark" href="{% url 'blog:post_single' post.slug %}">
                     {% if post.image %}
                     <img class="card-img-top" src="{{ post.image.url }}" alt="{{ post.title }}">
                     {% endif %}
                     <div class="card-body">
-                        <h2 style="font-size:18px; font-weight:bold;">{{ post.title|truncatechars:50 }}</h2>
-                        <p class="card-text">{{ post.excerpt|truncatechars:50 }}</p>
+                        <h2 class="h6 font-weight-bold">{{ post.title|truncatechars:50 }}</h2>
+                        <p class="card-text small text-muted">{{ post.excerpt|truncatechars:50 }}</p>
                     </div>
                 </a>
                 <div class="card-footer d-flex justify-content-between align-items-center">
@@ -54,4 +54,35 @@
 </div>
 
 {% include "base/footer.html" %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Desktop layout (for large screens) */
+@media (min-width: 992px) {
+  body .favourites-container {
+      margin-left: 240px !important;  /* match sidebar width */
+      padding: 20px;
+  }
+}
+
+
+/* Cards spacing */
+.favourites-container .card {
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+.favourites-container .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Mobile & tablet fix */
+@media (max-width: 992px) {
+    .favourites-container {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 15px;
+    }
+}
+</style>
 {% endblock %}
