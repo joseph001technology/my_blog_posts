@@ -13,5 +13,11 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     
     # Djoser endpoints 
-    path("auth/", include("djoser.urls")), path("auth/", include("djoser.urls.authtoken")),
+    path("auth/", include("djoser.urls")),
+    path("auth/", include("djoser.urls.authtoken")),
+    path('auth/', include('djoser.urls.jwt')),
+    
 ]
+ 
+
+

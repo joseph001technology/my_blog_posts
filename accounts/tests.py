@@ -25,34 +25,25 @@ class RegistrationTestCase(APITestCase):
         
         
         
-class userProfileTestCase(APITestCase):
+class UserProfileTestCase(TestCase):
     def setUp(self):
-        # create a new user making a post request to djoser endpoint
-        self.user = self.client.post('/api/auth/users/',  data = {
-        "username": "testuser1",
-        "email": "testuser1@josek.com",
-        "password": "testpassword123"
-      }) 
-        # obtain an auth token for the newly created user
-        response = self.client.post(
-         '/api/auth/jwt/create/', 
-        data={'email': 'testuser1@josek.com', 'password': 'testpassword123'}
-          )
-        self.token = response.data['access']  # <-- not 'auth_token'
+        # Create user
+        self.user = User.objects.create_user(
+            username="testuser1",
+            email="testuser1@josek.com",
+            password="testpassword123"
+        )
+        # Log in user with Django’s test client (session auth)
+        self.client.login(username="testuser1", password="testpassword123")
 
-        self.api_authentication()
-     
-    def api_authentication(self):
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
-        
-   
-      
     def test_user_profile_create(self):
-        response = self.client.post(reverse('userauth:edit'), data={
+        response = self.client.post(reverse('userauth:edit'), {
             'bio': 'This is a test bio',
-            'avatar': None  # or provide a test image if your model requires it
+            'avatar': ''  # empty string allowed
         })
-        self.assertEqual(response.status_code, status.HTTP_200_OK)     
+        self.assertEqual(response.status_code, 200)
+          
+          
           
 class TestUserModel(TestCase):
   def test_create_user(self):
