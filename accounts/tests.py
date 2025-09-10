@@ -38,6 +38,12 @@ class UserProfileTestCase(TestCase):
 
     def test_user_profile_create(self):
         response = self.client.post(reverse('userauth:edit'), {
+            # UserEditForm fields
+            'first_name': 'Test',
+            'last_name': 'User',
+            'email': 'testuser1@josek.com',
+            
+            # UserProfileForm fields
             'bio': 'This is a test bio',
             'avatar': ''  # empty string allowed
         })
