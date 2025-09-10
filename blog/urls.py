@@ -10,7 +10,7 @@ urlpatterns = [
     path('', views.home, name='homepage'),
     path('<slug:slug>/', views.post_single, name='post_single'),  # use slug consistently
     path('edit/<int:pk>/',views.EditView.as_view(),name='edit'),
-    path('delete/<int:pk>',views.Delete.as_view(),name='delete'),
+    path('delete/<int:pk>/',views.Delete.as_view(),name='delete'),
     
     
 ]
