@@ -1,7 +1,7 @@
 from django import forms
-from .models import Post
+from .models import Post,Comment
 from allauth.socialaccount.forms import SignupForm
-
+from mptt.forms import TreeNodeChoiceField
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -23,3 +23,35 @@ class MyCustomSocialSignupForm(SignupForm):
         return user
 
 
+
+class NewCommentForm(forms.ModelForm):
+    parent = TreeNodeChoiceField(
+        queryset=Comment.objects.all(),
+        required=False,
+        widget=forms.Select(attrs={'class': 'd-none'})
+    )
+
+    class Meta:
+        model = Comment
+        fields = ('parent', 'content')
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['parent'].label = ''
+        
+        
+ 
+
+class PostSearchForm(forms.Form):
+    q = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['q'].label = 'Search For'
+        self.fields['q'].widget.attrs.update(
+            {'class': 'form-control'})
+
+               
