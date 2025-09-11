@@ -147,6 +147,7 @@
 
     <span class="fw-bold fs-5">Profile</span>
   </div>
+{% load static %}
 
   {% if request.user.is_authenticated %}
   <div class="dropdown">
@@ -154,7 +155,7 @@
       {% if request.user.profile.avatar %}
         <img src="{{ request.user.profile.avatar.url }}" alt="Avatar" class="avatar">
       {% else %}
-        <img src="https://via.placeholder.com/36" alt="Avatar" class="avatar">
+        <img src="{% static 'images/avatar.jpg' %}" alt="Avatar" class="avatar">
       {% endif %}
     </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
