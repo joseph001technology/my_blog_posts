@@ -48,7 +48,10 @@ class UserProfileTestCase(TestCase):
             'avatar': ''  # empty string allowed
         })
         self.assertEqual(response.status_code, 200)
-          
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, 'Test')
+        self.assertEqual(self.user.profile.bio, 'This is a test bio')
+  
           
           
 class TestUserModel(TestCase):
