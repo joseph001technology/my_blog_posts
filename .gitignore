@@ -10,10 +10,6 @@ __pycache__/
 venv/
 .venv/
 
-# Django migrations
-*/migrations/
-!*/migrations/__init__.py
-
 # Local settings
 settings_local.py
 

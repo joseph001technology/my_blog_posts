@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
 from .forms import PostSearchForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
@@ -22,9 +23,7 @@ def home(request):
     all_posts = Post.newmanager.all()
     return render(request, 'blogtemplates/index.html', {'posts': all_posts})
 
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+    
 
 
 def post_single(request, slug):   
@@ -63,7 +62,7 @@ def post_single(request, slug):
 
                 return HttpResponseRedirect(reverse('blog:post_single', args=[post.slug]))
             else:
-                return HttpResponseRedirect('/accounts/login/')
+                return HttpResponseRedirect(reverse('account_login'))
     else:
         comment_form = NewCommentForm()
 
@@ -84,7 +83,7 @@ def logout_success(request):
 def personal_home(request):
     return render(request, 'blogtemplates/home.html')
 
-class AddView(CreateView):
+class AddView(LoginRequiredMixin,CreateView):
     model = Post
     template_name = 'blogtemplates/add.html'
     fields = '__all__'
