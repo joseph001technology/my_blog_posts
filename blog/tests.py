@@ -107,7 +107,10 @@ class TestPostModel(TestCase):
             slug='test-post',
             author=self.user,
             content='This is a test post body.',
-            status=PUBLISHED
+            status=PUBLISHED,
+            image=None
+            
+            
         )
         self.post.favourites.add(self.user)    
         self.post.save()
