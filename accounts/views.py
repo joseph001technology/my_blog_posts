@@ -14,6 +14,7 @@ from django.contrib.auth import update_session_auth_hash
 from blog.models import Post
 from .models import Profile
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.utils.http import url_has_allowed_host_and_scheme
  
 
 
@@ -32,7 +33,10 @@ def favourite_add(request, id):
         post.favourites.remove(request.user)
     else:
         post.favourites.add(request.user)
-    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+    referer = request.META.get('HTTP_REFERER', '/')
+    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
+        return HttpResponseRedirect(referer)
+    return HttpResponseRedirect('/')
 
 
 def avatar(request):
