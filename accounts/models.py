@@ -19,10 +19,10 @@ class Profile(models.Model):
     
     def clean(self):
         if self.avatar and hasattr(self.avatar, "file"):
-            w, h = get_image_dimensions(self.avatar)
-            if w < 100 or h < 100:
+            MIN_WIDTH, MIN_HEIGHT = get_image_dimensions(self.avatar)
+            if MIN_WIDTH < 100 or MIN_HEIGHT < 100:
                 raise ValidationError(_("Avatar is too small. Minimum size is 100x100px."))
-            if w > 1500 or h > 1500:
+            if MIN_WIDTH > 1500 or MIN_HEIGHT > 1500:
                 raise ValidationError(_("Avatar is too large. Maximum size is 1500x1500px."))
         
 
@@ -34,16 +34,16 @@ class Profile(models.Model):
             
     
     
-    
-@ receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-        
 
+    
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-    
-    
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        # Create profile if it doesn’t exist
+        Profile.objects.create(user=instance)
+    else:
+        # Only update profile if it exists
+        if hasattr(instance, "profile"):
+            instance.profile.save()
+
     

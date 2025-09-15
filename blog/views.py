@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView ,ListView
 from allauth.socialaccount.providers.google.views import oauth2_login
 from .models import Post
 from django.contrib.auth.decorators import login_required
@@ -19,11 +19,16 @@ def test_func(self):
 
 
 
-def home(request):
-    all_posts = Post.newmanager.all()
-    return render(request, 'blogtemplates/index.html', {'posts': all_posts})
+class HomeView(ListView):
+    model = Post
+    template_name = "blogtemplates/index.html"
+    context_object_name = "posts"    
+    paginate_by = 4  # number of posts per page
 
+    def get_queryset(self):
+        return Post.newmanager.all()  # keep your custom manager
     
+
 
 
 def post_single(request, slug):   

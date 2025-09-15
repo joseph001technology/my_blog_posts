@@ -37,7 +37,7 @@ class Post(models.Model):
         if self.image:
             img_path = self.image.path
             with Image.open(img_path) as img:
-                # Force resize to exactly 500x800 (stretch/compress)
+                # Force resize (stretch/compress)
                 img = img.resize((1200, 800), Image.Resampling.LANCZOS)
                 img.save(img_path)
 
