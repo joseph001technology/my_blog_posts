@@ -19,6 +19,7 @@ class Post(models.Model):
     title = models.CharField(max_length=250)
     excerpt = models.TextField(null=True, blank=True, verbose_name="Excerpt (optional)")
     image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    image_alt = models.CharField(max_length=255, blank=True, null=True, help_text="Alternative text for the image")
     slug = models.SlugField(max_length=250, unique_for_date='published_at', blank=True)
     published_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(default=timezone.now)

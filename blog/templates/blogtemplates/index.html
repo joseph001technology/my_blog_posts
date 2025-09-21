@@ -51,10 +51,12 @@
                     </h6>
 
                     {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="{{ post.title }}" 
-                            class="img-fluid rounded mb-2" style="max-height: 300px;">
+                    <img src="{{ post.image.url }}" 
+                      alt="{{ post.image_alt|default:post.title }}" 
+                      class="img-fluid rounded mb-2" style="max-height: 300px;">
+
                     {% else %}
-                        <img src="{% static 'images/post.jpg' %}" alt="Default post image" 
+                        <img src="{% static 'images/post2.jpg' %}" alt="{{ post.image_alt|default:post.title }}"  
                             class="img-fluid rounded mb-2" style="max-height: 300px;">
                     {% endif %}    
 
