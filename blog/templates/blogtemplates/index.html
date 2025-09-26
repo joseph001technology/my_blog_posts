@@ -1,5 +1,7 @@
 {% extends 'blogtemplates/base.html' %}
 
+{% load static %}
+
 {% block title %}
   Blog Posts
 {% endblock %}
@@ -49,8 +51,14 @@
                     </h6>
 
                     {% if post.image %}
-                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid rounded mb-2" style="max-height: 300px;">
-                    {% endif %}
+                    <img src="{{ post.image.url }}" 
+                      alt="{{ post.image_alt|default:post.title }}" 
+                      class="img-fluid rounded mb-2" style="max-height: 300px;">
+
+                    {% else %}
+                        <img src="{% static 'images/post2.jpg' %}" alt="{{ post.image_alt|default:post.title }}"  
+                            class="img-fluid rounded mb-2" style="max-height: 300px;">
+                    {% endif %}    
 
                     {% if post.excerpt %}
                         <p class="card-text">{{ post.excerpt|linebreaks }}</p>
@@ -73,5 +81,59 @@
         {% endfor %}
     </div>
 </div>
+
+
+
+<!-- ✅ PAGINATION -->
+<div class="container mt-4">
+  {% if is_paginated %}
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+
+        <!-- Previous Button -->
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span> <!-- Bootstrap icon style -->
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">&laquo;</span>
+          </li>
+        {% endif %}
+
+        <!-- Page Numbers -->
+        {% for num in paginator.page_range %}
+          {% if page_obj.number == num %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        <!-- Next Button -->
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">&raquo;</span>
+          </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+
+
 
 {% endblock %}
