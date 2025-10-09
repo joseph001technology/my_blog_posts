@@ -17,3 +17,24 @@ def generate_unique_slug(sender, instance, **kwargs):
             unique_slug = f"{base_slug}-{i}"
         else:
             raise ValueError("Could not generate unique slug after 100 attempts")
+
+
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import Group
+from django.conf import settings
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def assign_user_group(sender, instance, created, **kwargs):
+    # Ensure groups exist
+    privileged_group, _ = Group.objects.get_or_create(name="Privileged")
+    default_group, _ = Group.objects.get_or_create(name="Default")
+
+    if created:
+        if instance.user_name == "josephkiarie" or instance.is_superuser:
+            instance.groups.add(privileged_group)
+        else:
+            instance.groups.add(default_group)
+        instance.save()

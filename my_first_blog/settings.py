@@ -152,7 +152,7 @@ STATICFILES_DIRS = [
 ]
 
 # Sites and Redirects
-SITE_ID = 6
+SITE_ID = 7
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/home/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/logout-success/'
@@ -184,3 +184,15 @@ MEDIA_URL = '/media/'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+
+AUTH_USER_MODEL = 'accounts.NewUser'
+
+# Allauth custom user model settings
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "user_name"    
+ACCOUNT_USERNAME_REQUIRED = True                  
+ACCOUNT_EMAIL_REQUIRED = True                     
+ACCOUNT_AUTHENTICATION_METHOD = "username"        
+ 
+

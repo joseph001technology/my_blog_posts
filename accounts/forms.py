@@ -1,8 +1,11 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, PasswordChangeForm, SetPasswordForm
 from accounts.models import Profile
+
+
+User = get_user_model()
 
 # https://docs.djangoproject.com/en/3.0/topics/auth/default/
 # https://docs.djangoproject.com/en/3.0/topics/forms/

@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+
+from my_first_blog import settings
 from .managers import NewManager
 from .constants import CHOICES, DRAFT
 from mptt.models import MPTTModel, TreeForeignKey
@@ -24,11 +26,11 @@ class Post(models.Model):
     published_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
     content = models.TextField()
     status = models.CharField(max_length=10, choices=CHOICES, default=DRAFT)
     favourites = models.ManyToManyField(
-        User, related_name='favourite', default=None, blank=True)
+        settings.AUTH_USER_MODEL, related_name='favourite', blank=True)
     newmanager = NewManager()
 
     def save(self, *args, **kwargs):

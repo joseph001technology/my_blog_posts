@@ -15,7 +15,9 @@ class RegistrationTestCase(APITestCase):
         data = {
         "username": "testuser",
         "email": "testuser@josek.com",
-        "password": "PASwword1234"
+        "password": "PASwword1234",
+        "first_name": "Test",
+        
     }
         response = self.client.post('/api/auth/users/', data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -31,7 +33,9 @@ class UserProfileTestCase(TestCase):
         self.user = User.objects.create_user(
             username="testuser1",
             email="testuser1@josek.com",
-            password="testpassword123"
+            password="testpassword123",
+            first_name="Test",
+            
         )
         # Log in user with Django’s test client (session auth)
         self.client.login(username="testuser1", password="testpassword123")
@@ -56,14 +60,15 @@ class UserProfileTestCase(TestCase):
           
 class TestUserModel(TestCase):
   def test_create_user(self):
-      user = User.objects.create_user(username='testuser',password="password")   
+      user = User.objects.create_user(username='testuser',password="password", first_name="Test")   
       self.assertEqual(user.username, 'testuser')
       self.assertTrue(user.check_password('password'))
       
   def test_update_user(self):
-      user = User.objects.create_user(username='testuser',password="password")   
+      user = User.objects.create_user(username='testuser',password="password", first_name="Test")   
       self.assertEqual(user.username, 'testuser')
       self.assertTrue(user.check_password('password'))
+      self.assertEqual(user.first_name, 'Test')
       
       user.username = 'updateduser'
       user.set_password('newpassword')

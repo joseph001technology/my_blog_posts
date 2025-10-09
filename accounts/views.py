@@ -6,7 +6,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.auth import login
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from .forms import RegistrationForm, UserEditForm,UserProfileForm
 from .tokens import account_activation_token
 from django.contrib.auth.forms import PasswordChangeForm
@@ -16,6 +16,9 @@ from .models import Profile
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.utils.http import url_has_allowed_host_and_scheme
  
+
+User = get_user_model()
+
 
 
 @ login_required
