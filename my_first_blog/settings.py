@@ -189,11 +189,19 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTH_USER_MODEL = 'accounts.NewUser'
 
-# Allauth custom user model settings
-ACCOUNT_USER_MODEL_USERNAME_FIELD = "user_name"    
-ACCOUNT_USERNAME_REQUIRED = True                  
-ACCOUNT_EMAIL_REQUIRED = True                     
-ACCOUNT_AUTHENTICATION_METHOD = "username"        
+
+
+
+# Allauth settings
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "user_name"
+ACCOUNT_LOGIN_METHODS = {"username"}   
+ACCOUNT_SIGNUP_FIELDS = [
+    "email*",
+    "user_name*",
+    "password1*",
+    "password2*",
+]
+     
  
 
 
