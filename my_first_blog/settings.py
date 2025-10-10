@@ -20,9 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lx-hjz(-%-g-c$9b2o9=c9o^fp4@^p4u+6vu=nv$c$(k45gx1^'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-insecure-key")
 
-# SECURITY WARNING: don't run with debug turned on in production!
+ 
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'josephkiarie.pythonanywhere.com']
@@ -196,3 +196,26 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username"        
  
 
+
+ 
+
+# Security settings
+if not DEBUG:  # Only apply in production
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
+
+    # Content Security Policy (CSP) settings
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_STYLE_SRC   = ("'self'",)
+    CSP_SCRIPT_SRC  = ("'self'",)
+    CSP_FONT_SRC    = ("'self'",)
+    CSP_IMG_SRC     = ("'self'",)
+
+
+  
