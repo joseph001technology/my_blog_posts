@@ -13,19 +13,30 @@ from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixi
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import redirect
 
-class UserAccessMixin(PermissionRequiredMixin):
+class UserAccessMixin(UserPassesTestMixin, PermissionRequiredMixin, LoginRequiredMixin):
+
+
+    def handle_no_permission(self):
+        # Redirect to homepage instead of 403
+        return redirect('blog:homepage')
+    
+    login_url = 'account_login'
+    redirect_field_name = 'next'
+    
     def dispatch(self, request, *args, **kwargs):
-        if (not request.user.is_authenticated):
+        if not request.user.is_authenticated:
             return redirect_to_login(request.get_full_path(), self.login_url, self.redirect_field_name)
-        if (not self.has_permission()):
+        if not self.has_permission():
             return redirect ('blog:homepage')
         return super(UserAccessMixin, self).dispatch(request, *args, **kwargs)
     
     
 
-def test_func(self):
-    user = self.request.user
-    return user.is_authenticated and (user.user_name == "josephkiarie" or user.is_superuser)
+    def test_func(self):
+        user = self.request.user
+        return user.is_authenticated and user.groups.filter(name='privileged').exists()
+
+
 
 
 
@@ -98,7 +109,7 @@ def logout_success(request):
 def personal_home(request):
     return render(request, 'blogtemplates/home.html')
 
-class AddView(UserAccessMixin,LoginRequiredMixin,PermissionRequiredMixin, UserPassesTestMixin,CreateView):
+class AddView(UserAccessMixin,CreateView):
     model = Post
     template_name = 'blogtemplates/add.html'
     fields = '__all__'
@@ -109,41 +120,35 @@ class AddView(UserAccessMixin,LoginRequiredMixin,PermissionRequiredMixin, UserPa
     login_url = 'account_login'
     
     
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.user_name == "josephkiarie" or user.is_superuser)
+    
 
 
-class EditView(UserAccessMixin,UpdateView,LoginRequiredMixin,PermissionRequiredMixin, UserPassesTestMixin):
+class EditView(UserAccessMixin,UpdateView):
     model = Post
     template_name = 'blogtemplates/edit.html'
     fields = '__all__'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.user_name == "josephkiarie" or user.is_superuser)
+     
     
     # permission mixins and checks
     permission_required = 'blog.change_post'
     login_url = 'account_login'
 
 
-class Delete(UserAccessMixin,DeleteView,LoginRequiredMixin,PermissionRequiredMixin, UserPassesTestMixin):
+class Delete(UserAccessMixin,DeleteView):
     model = Post
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
     template_name = 'blogtemplates/confirm-delete.html'
-        
-        
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.user_name == "josephkiarie" or user.is_superuser)
-    
-    
-# permission mixins and checks
     permission_required = 'blog.delete_post'
     login_url = 'account_login'
+        
+        
+     
+
+ 
+   
 
 
 

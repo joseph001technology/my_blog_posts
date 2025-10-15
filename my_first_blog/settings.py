@@ -152,7 +152,7 @@ STATICFILES_DIRS = [
 ]
 
 # Sites and Redirects
-SITE_ID = 7
+SITE_ID = 8
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/home/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/logout-success/'
@@ -187,7 +187,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 
-AUTH_USER_MODEL = 'accounts.NewUser'
+AUTH_USER_MODEL = 'accounts.UserAccount'
 
 
 

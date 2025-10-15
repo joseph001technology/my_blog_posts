@@ -8,8 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-
-
+from django.contrib.auth.models import Group
 
 
 
@@ -33,8 +32,7 @@ class CustomAccountManager(BaseUserManager):
 
     def create_user(self, email, user_name, first_name, password, **other_fields):
 
-        if not email:
-            raise ValueError(_('You must provide an email address'))
+         
 
         email = self.normalize_email(email)
         user = self.model(email=email, user_name=user_name,
@@ -44,7 +42,7 @@ class CustomAccountManager(BaseUserManager):
         return user
 
 
-class NewUser(AbstractBaseUser, PermissionsMixin):
+class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True)
     user_name = models.CharField(max_length=150, unique=True)
@@ -54,6 +52,8 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
         'about'), max_length=500, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+     
+
 
     objects = CustomAccountManager()
 
@@ -66,7 +66,16 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
 
 
 
+def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
+         
+        group_name = self.role.capitalize()  
+        group, _ = Group.objects.get_or_create(name=group_name)
+
+        if not self.groups.filter(name=group_name).exists(): 
+            self.groups.clear() 
+            self.groups.add(group)
 
 
 

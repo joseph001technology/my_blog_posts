@@ -1,9 +1,12 @@
-# yourapp/signals.py
+
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.db import transaction, IntegrityError
 from .models import Post
+from django.db.models.signals import post_save
+from django.contrib.auth.models import Group
+from django.conf import settings
 
 @receiver(pre_save, sender=Post)
 def generate_unique_slug(sender, instance, **kwargs):
@@ -21,20 +24,31 @@ def generate_unique_slug(sender, instance, **kwargs):
 
 
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.contrib.auth.models import Group
-from django.conf import settings
+ 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def assign_user_group(sender, instance, created, **kwargs):
-    # Ensure groups exist
-    privileged_group, _ = Group.objects.get_or_create(name="Privileged")
-    default_group, _ = Group.objects.get_or_create(name="Default")
 
+# def assign_user_group(sender, instance, created, **kwargs):
+#     # Ensure groups exist
+#     privileged_group, _ = Group.objects.get_or_create(name="Privileged")
+#     default_group, _ = Group.objects.get_or_create(name="Default")
+
+#     if created:
+#         if instance.user_name == "josephkiarie" or instance.is_superuser:
+#             instance.groups.add(privileged_group)
+#         else:
+#             instance.groups.add(default_group)
+#         instance.save()
+        
+        
+def assign_user_group(sender, instance, created, **kwargs):
     if created:
-        if instance.user_name == "josephkiarie" or instance.is_superuser:
-            instance.groups.add(privileged_group)
+        instance.groups.clear()
+        group = Group.objects.filter(name__iexact=instance.role).first()
+
+        if group:
+            instance.groups.add(group)
+            instance.save()
         else:
-            instance.groups.add(default_group)
-        instance.save()
+            print(f"⚠️ No group found for role '{instance.role}' — user {instance.user_name} not assigned.")
+   

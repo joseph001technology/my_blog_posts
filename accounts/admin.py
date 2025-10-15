@@ -1,15 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import NewUser, Profile
+from .models import UserAccount, Profile
 
-# First, unregister the existing registration
-try:
-    admin.site.unregister(NewUser)
-except admin.sites.NotRegistered:
-    pass
+ 
+ 
 
 class CustomUserAdmin(UserAdmin):
-    model = NewUser
+    model = UserAccount
     list_display = ("email", "user_name", "first_name", "is_staff", "is_active")
     list_filter = ("is_staff", "is_active", "groups")
     ordering = ("email",)
@@ -29,5 +26,5 @@ class CustomUserAdmin(UserAdmin):
 
     search_fields = ("email", "user_name")
 
-admin.site.register(NewUser, CustomUserAdmin)
+admin.site.register(UserAccount, CustomUserAdmin)
 admin.site.register(Profile)
