@@ -28,27 +28,20 @@ def generate_unique_slug(sender, instance, **kwargs):
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 
-# def assign_user_group(sender, instance, created, **kwargs):
-#     # Ensure groups exist
-#     privileged_group, _ = Group.objects.get_or_create(name="Privileged")
-#     default_group, _ = Group.objects.get_or_create(name="Default")
-
-#     if created:
-#         if instance.user_name == "josephkiarie" or instance.is_superuser:
-#             instance.groups.add(privileged_group)
-#         else:
-#             instance.groups.add(default_group)
-#         instance.save()
-        
+ 
         
 def assign_user_group(sender, instance, created, **kwargs):
     if created:
         instance.groups.clear()
-        group = Group.objects.filter(name__iexact=instance.role).first()
+        
+        default_group, _ = Group.objects.get_or_create(name="Regular")
+        privileged_group, _ = Group.objects.get_or_create(name="Privileged")
 
-        if group:
-            instance.groups.add(group)
-            instance.save()
-        else:
-            print(f"⚠️ No group found for role '{instance.role}' — user {instance.user_name} not assigned.")
-   
+        instance.groups.add(default_group)
+
+         
+        instance.save()
+        
+    
+
+        

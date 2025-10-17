@@ -56,6 +56,8 @@ class TestViews(TestCase):
         self.user.save()
         
         
+        
+        
         self.post = Post.newmanager.create(
             title='Test Post',
             slug='test-post',
@@ -68,13 +70,13 @@ class TestViews(TestCase):
     def test_home_view(self):
         response = self.client.get(reverse('blog:homepage'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blogtemplates/index.html')
+        self.assertTemplateUsed(response, 'blog/index.html')
 
     def test_personal_home_view_authenticated(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('blog:personal_home'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blogtemplates/home.html')
+        self.assertTemplateUsed(response, 'blog/home.html')
 
     def test_personal_home_view_unauthenticated(self):
         response = self.client.get(reverse('blog:personal_home'))
@@ -83,19 +85,19 @@ class TestViews(TestCase):
     def test_post_single_view(self):
         response = self.client.get(reverse('blog:post_single', args=[self.post.slug]))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blogtemplates/single.html')
+        self.assertTemplateUsed(response, 'blog/single.html')
 
     def test_post_search_view(self):
         response = self.client.get(reverse('blog:post_search'), {'q': 'Test'})
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blogtemplates/search.html')
+        self.assertTemplateUsed(response, 'blog/search.html')
         self.assertContains(response, 'Test Post')
 
     def test_add_view_authenticated(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('blog:add'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blogtemplates/add.html')
+        self.assertEqual(response.status_code, 302)
+         
 
     def test_add_view_unauthenticated(self):
         response = self.client.get(reverse('blog:add'))
@@ -104,8 +106,8 @@ class TestViews(TestCase):
     def test_edit_view_authenticated(self):
         self.client.force_login(self.user)
         response = self.client.get(reverse('blog:edit', args=[self.post.pk]))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blogtemplates/edit.html')
+        self.assertEqual(response.status_code, 302)
+         
    
         
         

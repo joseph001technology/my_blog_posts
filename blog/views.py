@@ -34,7 +34,7 @@ class UserAccessMixin(UserPassesTestMixin, PermissionRequiredMixin, LoginRequire
 
     def test_func(self):
         user = self.request.user
-        return user.is_authenticated and user.groups.filter(name='privileged').exists()
+        return user.is_authenticated and user.groups.filter(name='priviledged').exists()
 
 
 
@@ -42,7 +42,7 @@ class UserAccessMixin(UserPassesTestMixin, PermissionRequiredMixin, LoginRequire
 
 class HomeView(ListView):
     model = Post
-    template_name = "blogtemplates/index.html"
+    template_name = "blog/index.html"
     context_object_name = "posts"    
     paginate_by = 4  # number of posts per page
 
@@ -92,7 +92,7 @@ def post_single(request, slug):
     else:
         comment_form = NewCommentForm()
 
-    return render(request, 'blogtemplates/single.html', {
+    return render(request, 'blog/single.html', {
         'post': post,
         'comments': comments,
         'user_comment': user_comment,
@@ -103,15 +103,15 @@ def post_single(request, slug):
 
 
 def logout_success(request):
-    return render(request, 'blogtemplates/logout_success.html')
+    return render(request, 'blog/logout_success.html')
 
 @login_required
 def personal_home(request):
-    return render(request, 'blogtemplates/home.html')
+    return render(request, 'blog/home.html')
 
 class AddView(UserAccessMixin,CreateView):
     model = Post
-    template_name = 'blogtemplates/add.html'
+    template_name = 'blog/add.html'
     fields = '__all__'
     success_url = reverse_lazy('blog:homepage')
     
@@ -125,7 +125,7 @@ class AddView(UserAccessMixin,CreateView):
 
 class EditView(UserAccessMixin,UpdateView):
     model = Post
-    template_name = 'blogtemplates/edit.html'
+    template_name = 'blog/edit.html'
     fields = '__all__'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
@@ -140,7 +140,7 @@ class Delete(UserAccessMixin,DeleteView):
     model = Post
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
-    template_name = 'blogtemplates/confirm-delete.html'
+    template_name = 'blog/confirm-delete.html'
     permission_required = 'blog.delete_post'
     login_url = 'account_login'
         
@@ -170,7 +170,7 @@ def post_search(request):
     
             results = Post.objects.filter(query)
             
-    return render(request, 'blogtemplates/search.html', {
+    return render(request, 'blog/search.html', {
         'form': form,
         'q': q,
         'results': results
