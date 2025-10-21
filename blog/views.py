@@ -34,7 +34,7 @@ class UserAccessMixin(UserPassesTestMixin, PermissionRequiredMixin, LoginRequire
 
     def test_func(self):
         user = self.request.user
-        return user.is_authenticated and user.groups.filter(name__iexact='Priviledged').exists()
+        return user.is_authenticated and user.groups.filter(name__iexact='Privileged').exists()
 
 
 
