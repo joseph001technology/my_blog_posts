@@ -9,24 +9,46 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
 from .forms import PostSearchForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin,UserPassesTestMixin
+from django.contrib.auth.views import redirect_to_login
+from django.shortcuts import redirect
+
+class UserAccessMixin(UserPassesTestMixin, PermissionRequiredMixin, LoginRequiredMixin):
 
 
+    def handle_no_permission(self):
+        # Redirect to homepage instead of 403
+        return redirect('blog:homepage')
+    
+    login_url = 'account_login'
+    redirect_field_name = 'next'
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect_to_login(request.get_full_path(), self.login_url, self.redirect_field_name)
+        if not self.has_permission():
+            return redirect ('blog:homepage')
+        return super(UserAccessMixin, self).dispatch(request, *args, **kwargs)
+    
+    
 
-def test_func(self):
-    user = self.request.user
-    return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+    def test_func(self):
+        user = self.request.user
+        return user.is_authenticated and user.groups.filter(name__iexact='Privileged').exists()
+
+
 
 
 
 class HomeView(ListView):
     model = Post
-    template_name = "blogtemplates/index.html"
+    template_name = "blog/index.html"
     context_object_name = "posts"    
     paginate_by = 4  # number of posts per page
 
     def get_queryset(self):
-        return Post.newmanager.all()  # keep your custom manager
+        return Post.newmanager.filter(status='published')
+
     
 
 
@@ -61,7 +83,7 @@ def post_single(request, slug):
             if request.user.is_authenticated:
                 user_comment = comment_form.save(commit=False)
                 user_comment.post = post
-                user_comment.name = request.user.username
+                user_comment.name = request.user.user_name
                 user_comment.email = request.user.email
                 user_comment.save()
 
@@ -71,7 +93,7 @@ def post_single(request, slug):
     else:
         comment_form = NewCommentForm()
 
-    return render(request, 'blogtemplates/single.html', {
+    return render(request, 'blog/single.html', {
         'post': post,
         'comments': comments,
         'user_comment': user_comment,
@@ -82,44 +104,52 @@ def post_single(request, slug):
 
 
 def logout_success(request):
-    return render(request, 'blogtemplates/logout_success.html')
+    return render(request, 'blog/logout_success.html')
 
 @login_required
 def personal_home(request):
-    return render(request, 'blogtemplates/home.html')
+    return render(request, 'blog/home.html')
 
-class AddView(LoginRequiredMixin,CreateView):
+class AddView(UserAccessMixin,CreateView):
     model = Post
-    template_name = 'blogtemplates/add.html'
+    template_name = 'blog/add.html'
     fields = '__all__'
     success_url = reverse_lazy('blog:homepage')
     
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+    # permission mixins and checks
+    permission_required = 'blog.add_post'
+    login_url = 'account_login'
+    
+    
+    
 
 
-class EditView(UpdateView):
+class EditView(UserAccessMixin,UpdateView):
     model = Post
-    template_name = 'blogtemplates/edit.html'
+    template_name = 'blog/edit.html'
     fields = '__all__'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+     
+    
+    # permission mixins and checks
+    permission_required = 'blog.change_post'
+    login_url = 'account_login'
 
 
-class Delete(DeleteView):
+class Delete(UserAccessMixin,DeleteView):
     model = Post
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('blog:homepage')
-    template_name = 'blogtemplates/confirm-delete.html'
+    template_name = 'blog/confirm-delete.html'
+    permission_required = 'blog.delete_post'
+    login_url = 'account_login'
         
         
-    def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and (user.username == "josephkiarie" or user.is_superuser)
+     
+
+ 
+   
 
 
 
@@ -141,7 +171,7 @@ def post_search(request):
     
             results = Post.objects.filter(query)
             
-    return render(request, 'blogtemplates/search.html', {
+    return render(request, 'blog/search.html', {
         'form': form,
         'q': q,
         'results': results
