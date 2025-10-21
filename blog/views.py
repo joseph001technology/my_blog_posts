@@ -47,7 +47,8 @@ class HomeView(ListView):
     paginate_by = 4  # number of posts per page
 
     def get_queryset(self):
-        return Post.newmanager.all()  # keep your custom manager
+        return Post.newmanager.filter(status='published')
+
     
 
 
