@@ -1,11 +1,11 @@
-from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from . import views
 from django.contrib.auth.decorators import user_passes_test
+from django.urls import include, path, reverse_lazy
 from django.views.generic import TemplateView
-from .forms import UserLoginForm, PwdResetForm, PwdResetConfirmForm, PwdChangeForm
-from django.urls import reverse_lazy
- 
+
+from . import views
+from .forms import (PwdChangeForm, PwdResetConfirmForm, PwdResetForm,
+                    UserLoginForm)
 
 app_name = 'userauth'   
 

@@ -1,8 +1,10 @@
-from django import forms
-from .models import Post,Comment
 from allauth.socialaccount.forms import SignupForm
-from mptt.forms import TreeNodeChoiceField
+from django import forms
 from django_summernote.widgets import SummernoteWidget
+from mptt.forms import TreeNodeChoiceField
+
+from .models import Comment, Post
+
 
 class PostForm(forms.ModelForm):
     class Meta:

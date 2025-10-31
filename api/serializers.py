@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from blog.models import Post
+
 from accounts.models import Profile
+from blog.models import Post
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

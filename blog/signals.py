@@ -1,12 +1,13 @@
 
-from django.db.models.signals import pre_save
+from django.conf import settings
+from django.contrib.auth.models import Group
+from django.db import IntegrityError, transaction
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.utils.text import slugify
-from django.db import transaction, IntegrityError
+
 from .models import Post
-from django.db.models.signals import post_save
-from django.contrib.auth.models import Group
-from django.conf import settings
+
 
 @receiver(pre_save, sender=Post)
 def generate_unique_slug(sender, instance, **kwargs):

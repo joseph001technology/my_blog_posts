@@ -1,21 +1,20 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from django.contrib.auth import login
-from django.contrib.auth import get_user_model
-from .forms import RegistrationForm, UserEditForm,UserProfileForm
-from .tokens import account_activation_token
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
+                              redirect, render)
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import (url_has_allowed_host_and_scheme,
+                               urlsafe_base64_decode, urlsafe_base64_encode)
+
 from blog.models import Post
+
+from .forms import RegistrationForm, UserEditForm, UserProfileForm
 from .models import Profile
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
-from django.utils.http import url_has_allowed_host_and_scheme
- 
+from .tokens import account_activation_token
 
 User = get_user_model()
 

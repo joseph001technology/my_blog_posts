@@ -1,17 +1,18 @@
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView ,ListView
 from allauth.socialaccount.providers.google.views import oauth2_login
-from .models import Post
 from django.contrib.auth.decorators import login_required
-from .forms import NewCommentForm
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.db.models import Q
-from .forms import PostSearchForm
-from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin,UserPassesTestMixin
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        PermissionRequiredMixin,
+                                        UserPassesTestMixin)
 from django.contrib.auth.views import redirect_to_login
-from django.shortcuts import redirect
+from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
+from .forms import NewCommentForm, PostSearchForm
+from .models import Post
+
 
 class UserAccessMixin(UserPassesTestMixin, PermissionRequiredMixin, LoginRequiredMixin):
 
@@ -66,7 +67,7 @@ def post_single(request, slug):
     allcomments = post.comments.filter(status=True)
     page = request.GET.get('page', 1)
 
-    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
     paginator = Paginator(allcomments, 10)
     try:
         comments = paginator.page(page)

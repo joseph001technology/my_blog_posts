@@ -1,12 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth import get_user_model
-
-from my_first_blog import settings
-from .managers import NewManager
-from .constants import CHOICES, DRAFT
 from mptt.models import MPTTModel, TreeForeignKey
 from PIL import Image
+
+from my_first_blog import settings
+
+from .constants import CHOICES, DRAFT
+from .managers import NewManager
 
 User = get_user_model()
 

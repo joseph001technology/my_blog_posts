@@ -1,9 +1,12 @@
-from django.shortcuts import render
-from blog.models import Post
-from accounts.models import Profile
-from rest_framework import viewsets
-from .serializers import UserSerializer, PostsSerializer, ProfileSerializer
 from django.contrib.auth import get_user_model
+from django.shortcuts import render
+from rest_framework import viewsets
+
+from accounts.models import Profile
+from blog.models import Post
+
+from .serializers import PostsSerializer, ProfileSerializer, UserSerializer
+
 User = get_user_model()
 
 
