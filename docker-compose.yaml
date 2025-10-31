@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    image: my_django_app:latest
+    container_name: my_django_app
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - sqlite_data:/app/db   
+    environment:
+     - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+
+
+volumes:
+  sqlite_data:
+
