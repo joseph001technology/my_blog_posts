@@ -57,3 +57,6 @@ node_modules/
 db.sqlite3
 staticfiles/
 media/
+
+# Data dumps
+datadump.json
