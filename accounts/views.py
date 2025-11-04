@@ -1,14 +1,58 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.http import HttpResponse
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
+                              redirect, render)
 from django.template.loader import render_to_string
-from django.contrib.auth import login
-from django.contrib.auth.models import User
-from .forms import RegistrationForm, UserEditForm
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import (url_has_allowed_host_and_scheme,
+                               urlsafe_base64_decode, urlsafe_base64_encode)
+
+from blog.models import Post
+
+from .forms import RegistrationForm, UserEditForm, UserProfileForm
+from .models import Profile
 from .tokens import account_activation_token
+
+User = get_user_model()
+
+
+
+@ login_required
+def favourite_list(request):
+    new = Post.newmanager.filter(favourites=request.user)
+    return render(request,
+                  'accounts/favourites.html',
+                  {'new': new})
+    
+    
+@ login_required
+def favourite_add(request, id):
+    post = get_object_or_404(Post, id=id)
+    if post.favourites.filter(id=request.user.id).exists():
+        post.favourites.remove(request.user)
+    else:
+        post.favourites.add(request.user)
+    referer = request.META.get('HTTP_REFERER', '/')
+    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
+        return HttpResponseRedirect(referer)
+    return HttpResponseRedirect('/')
+
+
+def avatar(request):
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user)
+        avatar = Profile.objects.filter(user=user)
+        context = {
+            "avatar": avatar,
+        }
+        return context
+    else:
+        return {
+            'NotLoggedIn': User.objects.none()
+        }
 
 
 @login_required
@@ -19,13 +63,22 @@ def profile(request):
 @login_required
 def edit(request):
     if request.method == 'POST':
-        user_form = UserEditForm(instance=request.user, data=request.POST)
-        if user_form.is_valid():
+        user_form = UserEditForm(instance=request.user,
+                                 data=request.POST)
+
+        profile_form = UserProfileForm(
+            request.POST, request.FILES, instance=request.user.profile)
+
+        if profile_form.is_valid() and user_form.is_valid():
             user_form.save()
-            return redirect('userauth:profile')  # Redirect after saving
+            profile_form.save()
     else:
         user_form = UserEditForm(instance=request.user)
-    return render(request, 'accounts/update.html', {'user_form': user_form})
+        profile_form = UserProfileForm(instance=request.user.profile)
+
+    return render(request,
+                  'accounts/update.html',
+                  {'user_form': user_form, 'profile_form': profile_form})
 
 
 @login_required
@@ -77,3 +130,21 @@ def activate(request, uidb64, token):
         return redirect('userauth:profile')
     else:
         return render(request, 'registration/activation_invalid.html')
+
+
+@login_required
+def custom_password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            return redirect('userauth:password_change_done')  # 👈 Redirect here
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'registration/password_change_form.html', {'form': form})
+
+
+def password_reset_done(request):
+    return render(request, 'registration/password_reset_done.html')
+

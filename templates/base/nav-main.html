@@ -1,83 +1,218 @@
+<!-- Bootstrap CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <style>
-    .dot {
-        height: 30px;
-        width: 30px;
-        background-color: #000;
-        border-radius: 50%;
-        display: inline-block;
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f4f4;
+  }
+
+  .sidebar {
+    background-color: #3a7d82;
+    border-right: 1px solid #e0e0e0;
+    min-height: 100vh;
+    padding-top: 1rem;
+    position: fixed;
+    top: 56px; /* Below navbar */
+    left: 0;
+    width: 220px;
+    z-index: 1030;
+    transition: width 0.3s ease;
+    overflow-x: hidden;
+  }
+
+  /* Collapsed state for desktop */
+  .sidebar.collapsed {
+    width: 60px;
+  }
+
+  .sidebar.collapsed .nav-link {
+    text-align: center;
+    padding: 12px 10px;
+  }
+
+  .sidebar.collapsed .nav-link span {
+    display: none; /* Hide text when collapsed */
+  }
+
+  .sidebar .nav-link {
+    color: white;
+    font-weight: 500;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+  }
+
+  .sidebar .navbar-brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 0 20px;
+    color: white;
+  }
+
+  .content {
+    margin-left: 220px;
+    padding: 2rem;
+    padding-top: 80px;
+    transition: margin-left 0.3s ease;
+  }
+
+  .sidebar.collapsed ~ .content {
+    margin-left: 60px;
+  }
+
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #3a7d82;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1040;
+    color: white;
+  }
+
+  .topbar .avatar {
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  .dropdown-menu a {
+    color: #333;
+  }
+
+  /* Mobile sidebar */
+  @media (max-width: 768px) {
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      top: 56px;
+      width: 220px !important;
     }
 
-    @media (max-width: 768px) {
-        #navbarSupportedContent {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-            padding: 10px;
-            width: 250px;
-            margin-left: auto;
-            margin-right: 10px;
-        }
-
-        #navbarSupportedContent a {
-            display: block;
-            padding: 10px 15px;
-            margin: 5px 0;
-            width: 100%;
-        }
-
-        .navbar-nav {
-            flex-direction: column;
-        }
+    .sidebar.show {
+      transform: translateX(0);
     }
+
+    .content {
+      margin-left: 0 !important;
+      padding-top: 100px;
+    }
+
+    .navbar-toggler-icon {
+      filter: brightness(0) invert(1);
+    }
+
+    /* Hide desktop toggle on mobile */
+    #desktop-toggle {
+      display: none !important;
+    }
+  }
+
+  /* Hide mobile toggle on desktop */
+  @media (min-width: 769px) {
+    #mobile-toggle {
+      display: none !important;
+    }
+  }
 </style>
 
-<nav class="navbar navbar-expand-md navbar-light bg-white border-bottom shadow-sm">
-    <div class="container-fluid">
-        <h5 class="my-0 mr-md-auto font-weight-normal">
-            <a class="text-dark" href="/">Demo</a>
-        </h5>
+<!-- Topbar -->
+<nav class="navbar navbar-expand-md topbar shadow-sm">
+  <div class="d-flex align-items-center">
+    <!-- Mobile Toggle -->
+    <button id="mobile-toggle" class="navbar-toggler me-3" type="button" onclick="toggleSidebarMobile()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <!-- Hamburger icon for mobile -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <!-- Desktop Collapse Button -->
+    <button id="desktop-toggle" class="btn btn-outline-light btn-sm me-3" onclick="toggleSidebarDesktop()">
+      ☰
+    </button>
 
-        <!-- Collapsible Navbar Content -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <nav class="my-2 my-md-0 mr-md-3">
-                <a class="p-2 text-dark" href="#">Features</a>
-                <a class="p-2 text-dark" href="#">Enterprise</a>
-                <a class="p-2 text-dark" href="#">Support</a>
-            </nav>
+    <span class="fw-bold fs-5">Profile</span>
+  </div>
+{% load static %}
 
-            {% if request.user.is_authenticated %}
-                <span class="dot ml-2"></span>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ request.user.username }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{% url 'userauth:profile' %}">Dashboard</a>
-                            <a class="dropdown-item" href="{% url 'blog:personal_home' %}">Blog</a>
-                            <a class="dropdown-item" href="{% url 'userauth:edit' %}">Edit details</a>
-                            <a class="dropdown-item" href="{% url 'userauth:pwdforgot' %}">Change Password</a>
-
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
-
-                        </div>
-                    </li>
-                </ul>
-            {% else %}
-                <nav>
-                    <a class="p-2 text-dark" href="{% url 'userauth:register' %}">Register</a>
-                    <a class="p-2 text-dark" href="{% url 'login' %}">Login</a>
-                </nav>
-            {% endif %}
-        </div>
-    </div>
+  {% if request.user.is_authenticated %}
+  <div class="dropdown">
+    <a href="#" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+      {% if request.user.profile.avatar %}
+        <img src="{{ request.user.profile.avatar.url }}" alt="Avatar" class="avatar">
+      {% else %}
+        <img src="{% static 'images/avatar.jpg' %}" alt="Avatar" class="avatar">
+      {% endif %}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+      <li><a class="dropdown-item" href="{% url 'userauth:profile' %}">Dashboard</a></li>
+      <li><a class="dropdown-item" href="{% url 'userauth:edit' %}">Edit Details</a></li>
+      <li><a class="dropdown-item" href="{% url 'userauth:pwdforgot' %}">Change Password</a></li>
+      <li><a class="dropdown-item" href="{% url 'userauth:favourite_list' %}">Favourites</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a></li>
+    </ul>
+  </div>
+  {% endif %}
 </nav>
+
+<!-- Sidebar -->
+<div class="sidebar shadow-sm">
+  <ul class="nav flex-column mt-3">
+    {% if request.user.is_authenticated %}
+      <li class="nav-item"><a class="nav-link" href="{% url 'userauth:profile' %}"><span>Dashboard</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>Features</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>Enterprise</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>Support</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'blog:personal_home' %}"><span>Blog</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}"><span>Logout</span></a></li>
+    {% else %}
+      <li class="nav-item"><a class="nav-link" href="{% url 'userauth:register' %}"><span>Register</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><span>Login</span></a></li>
+    {% endif %}
+  </ul>
+</div>
+
+<!-- JavaScript -->
+<script>
+  // Mobile toggle
+  function toggleSidebarMobile() {
+    document.querySelector('.sidebar').classList.toggle('show');
+  }
+
+  // Desktop collapse toggle
+  function toggleSidebarDesktop() {
+    document.querySelector('.sidebar').classList.toggle('collapsed');
+  }
+
+  // Close mobile sidebar on outside click
+  document.addEventListener('click', function (e) {
+    const sidebar = document.querySelector('.sidebar');
+    const mobileToggle = document.getElementById('mobile-toggle');
+    if (window.innerWidth <= 768) {
+      if (!sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
+        sidebar.classList.remove('show');
+      }
+    }
+  });
+</script>
+
+<!-- Main Content -->
+<div class="content">
+  {% block content %}
+  {% endblock %}
+</div>

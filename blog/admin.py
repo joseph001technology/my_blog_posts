@@ -1,9 +1,16 @@
 from django.contrib import admin
-from . import models
+from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
 from mptt.admin import MPTTModelAdmin
 
+from . import models
 
-# Register your models here.
+User = get_user_model()
+
+ 
+
+
+ 
  
 class AuthorAdmin( admin.ModelAdmin ):
     list_display = ('title','id','status' ,'author')

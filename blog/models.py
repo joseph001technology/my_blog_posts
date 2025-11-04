@@ -1,41 +1,49 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth import get_user_model
-from .managers import NewManager
-from .constants import  CHOICES,DRAFT
 from mptt.models import MPTTModel, TreeForeignKey
+from PIL import Image
 
+from my_first_blog import settings
+
+from .constants import CHOICES, DRAFT
+from .managers import NewManager
 
 User = get_user_model()
-
-# Create your models here.
 
 def user_directory_path(instance, filename):
     return 'posts/{0}/{1}'.format(instance.id, filename)
 
 
-class Post(models.Model) :#database table
+class Post(models.Model):
     objects = models.Manager()  # Default manager
     published = NewManager()
- # Table columns
 
     title = models.CharField(max_length=250)
-    excerpt = models.TextField(null=True,blank=True,verbose_name="Excerpt (optional)")
-    image = models.ImageField(upload_to=user_directory_path,default='posts/default.png',blank=True,null=True)
-    slug = models.SlugField(max_length=250, unique_for_date='published_at',blank=True )
+    excerpt = models.TextField(null=True, blank=True, verbose_name="Excerpt (optional)")
+    image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    image_alt = models.CharField(max_length=255, blank=True, null=True, help_text="Alternative text for the image")
+    slug = models.SlugField(max_length=250, unique_for_date='published_at', blank=True)
     published_at = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
     content = models.TextField()
     status = models.CharField(max_length=10, choices=CHOICES, default=DRAFT)
-    objects = models.Manager()  # default manager
+    favourites = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name='favourite', blank=True)
     newmanager = NewManager()
-    
+
     def save(self, *args, **kwargs):
-        if not self.image:
-            self.image = 'posts/default.png'
+        # Save first to get an ID for upload path
         super().save(*args, **kwargs)
+
+        if self.image:
+            img_path = self.image.path
+            with Image.open(img_path) as img:
+                # Force resize (stretch/compress)
+                img = img.resize((1200, 800), Image.Resampling.LANCZOS)
+                img.save(img_path)
 
     class Meta:
         ordering = ('-published_at',)
@@ -44,25 +52,23 @@ class Post(models.Model) :#database table
         return self.title
 
 
-
-# Create your models here.
-
-    
 class Comment(MPTTModel):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='comments')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=50)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE,
-                            null=True, blank=True, related_name='children')
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='children'
+    )
     email = models.EmailField()
     content = models.TextField()
     published_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
-    
-    
+
     class MPTTMeta:
         order_insertion_by = ['published_at']
 
     def __str__(self):
-            return f'Comment by {self.name}'
-    
-    
+        return f'Comment by {self.name}'

@@ -1,5 +1,6 @@
-{% extends 'blogtemplates/base.html' %}
+{% extends 'blog/base.html' %}
 {% load mptt_tags %}
+{% load static %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -7,8 +8,34 @@
 <div class="container mt-4">
   <h1>Title</h1>
   <h5>{{ post.title }}</h5>
-  <p class="text-muted">
-    By {{ post.author }} | Published on {{ post.published_at|date:"F j, Y" }}
+  <p class="text-muted d-flex justify-content-between align-items-center">
+    <span>By {{ post.author }} | Published on {{ post.published_at|date:"F j, Y" }}</span>
+
+    <div class="d-flex align-items-center">
+      <!-- ✅ Favourites Button at top right -->
+      {% if user.is_authenticated %}
+        {% if fav %}
+          <a href="{% url 'userauth:favourite_list' %}" class="btn btn-outline-danger me-2 explore-btn">
+            Remove Favourites
+            <img src="/media/posts/like1.png" alt="favourite" style="width:20px; height:20px; vertical-align: middle;">
+          </a>
+        {% else %}
+          <a href="{% url 'userauth:favourite_add' post.id %}" class="btn btn-outline-primary me-2 explore-btn">
+            Add to Favourites
+            <img src="/media/posts/like2.png" alt="favourite" style="width:20px; height:20px; vertical-align: middle;">
+          </a>
+        {% endif %}
+        <!-- ✅ View Favourites Button -->
+        <a href="{% url 'userauth:favourite_list' %}" class="btn btn-outline-secondary explore-btn">
+          View Favourites
+        </a>
+      {% else %}
+        <a href="{% url 'userauth:register' %}" class="btn btn-outline-primary explore-btn me-2">
+          Add to Favourites
+          <img src="/media/posts/like2.png" alt="favourite" style="width:20px; height:20px; vertical-align: middle;">
+        </a>
+      {% endif %}
+    </div>
   </p>
 
   {% if post.image %}
@@ -17,7 +44,7 @@
 
   <hr>
   <h2>Content</h2>
-  <p>{{ post.content|linebreaks }}</p>
+  <div>{{ post.content|safe }}</div>
 
   <div class="btn-group button">
     {% if user.is_authenticated %}
@@ -43,7 +70,7 @@
             <span class="text-muted">— replied to {{ node.parent.name }}</span>
           {% endif %}
           <span class="text-muted">| {{ node.published_at|date:"F j, Y H:i" }}</span>
-          <p>{{ node.content|linebreaks }}</p>
+          <div>{{ node.content|safe }}</div>
 
           {% if node.level < 3 %}
             <button class="btn btn-sm btn-outline-primary explore-btn" onclick="replyForm({{ node.id }})">Reply</button>

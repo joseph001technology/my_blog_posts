@@ -5,14 +5,26 @@
 {% include "base/nav-main.html" %}
 
 <style>
-    .update-form input {
+    .update-form input, .update-form textarea {
         border: 2px solid #ccc;
         height: calc(2em + .75rem + 2px);
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        border-radius: 4px;
     }
 
-    .update-form input:focus {
+    .update-form input:focus, .update-form textarea:focus {
         border-color: #1497ff;
         box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.075), 0 0 0 0.2rem rgba(20, 151, 255, 0.25);
+        outline: none;
+    }
+
+    .img-thumbnail {
+        border: 1px solid #dee2e6;
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        max-width: 100%;
+        height: auto;
     }
 </style>
 
@@ -24,38 +36,67 @@
                 <form class="form-reset p-4 rounded update-form" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
-                    <p class="h4 mb-4 font-weight-bold">Change your details</p>
-                    <p>You can edit your account using the following form:</p>
-
-                    {% if user_form.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            Please correct the errors below.
+                    {% if user_form.is_valid and profile_form.is_valid %}
+                        <div class="alert alert-primary" role="alert">
+                            Details successfully updated!
                         </div>
-                    {% elif messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}" role="alert">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
+                        <p class="small text-center pt-0">
+                            <a href="{% url 'userauth:profile' %}">Back to Dashboard</a>
+                        </p>
+                    {% else %}
+                        <p class="h4 mb-4 font-weight-bold">Change your details</p>
+                        <p>You can edit your account using the following form:</p>
                     {% endif %}
 
+                    {% if user_form.errors or profile_form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Please correct the errors below:</strong>
+                        </div>
+                    {% endif %}
+
+                    <!-- First Name -->
                     <label class="small font-weight-bold">{{ user_form.first_name.label }}</label>
                     {{ user_form.first_name }}
                     {% for error in user_form.first_name.errors %}
                         <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
 
+                    <!-- Last Name -->
                     <label class="small font-weight-bold">{{ user_form.last_name.label }}</label>
                     {{ user_form.last_name }}
                     {% for error in user_form.last_name.errors %}
                         <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
 
+                    <!-- Email -->
                     <label class="small font-weight-bold">{{ user_form.email.label }}</label>
                     {{ user_form.email }}
                     {% for error in user_form.email.errors %}
                         <div class="text-danger small">{{ error }}</div>
                     {% endfor %}
+
+                    <!-- Bio -->
+                    <label class="small font-weight-bold">{{ profile_form.bio.label }}</label>
+                    {{ profile_form.bio }}
+                    {% for error in profile_form.bio.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+
+                    <!-- Avatar -->
+                    <div class="form-group pt-4">
+                        <label class="small font-weight-bold">{{ profile_form.avatar.label }}</label>
+                        {{ profile_form.avatar }}
+                        {% for error in profile_form.avatar.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+
+                        {% if user.profile.avatar %}
+                            <div class="mt-2">
+                                <p class="small">Current Avatar:</p>
+                                <img src="{{ user.profile.avatar.url }}" alt="Avatar" width="100" height="100" class="img-thumbnail">
+                            </div>
+                        {% endif %}
+                    </div>
 
                     <button class="btn btn-primary btn-block py-2 mb-4 mt-5 font-weight-bold" type="submit">
                         Save Changes

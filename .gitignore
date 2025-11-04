@@ -10,10 +10,6 @@ __pycache__/
 venv/
 .venv/
 
-# Django migrations
-*/migrations/
-!*/migrations/__init__.py
-
 # Local settings
 settings_local.py
 
@@ -60,3 +56,7 @@ coverage.xml
 node_modules/
 db.sqlite3
 staticfiles/
+media/
+
+# Data dumps
+datadump.json
